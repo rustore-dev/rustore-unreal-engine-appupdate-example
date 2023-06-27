@@ -1,0 +1,27 @@
+#include "AppUpdateErrorListenerImpl.h"
+
+FURuStoreError* AppUpdateErrorListenerImpl::ConvertError(AndroidJavaObject* errorObject)
+{
+    auto error = ErrorListener::ConvertError(errorObject);
+
+    if (error->name == "RuStoreInstallException")
+    {
+        auto errorCode = errorObject->GetInt("code");
+        error->description = FString::FromInt(errorCode);
+    }
+
+    return error;
+}
+
+#if PLATFORM_ANDROID
+extern "C"
+{
+    JNIEXPORT void JNICALL Java_com_Plugins_RuStoreAppUpdate_AppUpdateErrorListenerWrapper_NativeOnFailure(JNIEnv*, jobject, jlong pointer, jthrowable throwable)
+    {
+        auto castobj = reinterpret_cast<ErrorListener*>(pointer);
+        auto obj = new AndroidJavaObject(throwable);
+        obj->UpdateToGlobalRef();
+        castobj->OnFailure(obj);
+    }
+}
+#endif
