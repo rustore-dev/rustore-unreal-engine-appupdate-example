@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <prebuildCopies>
+    <copyDir src="$S(PluginDir)/Private/Java" dst="$S(BuildDir)/src/com/Plugins/RuStoreAppUpdate" />
+    <copyDir src="$S(PluginDir)/ThirdParty/Android" dst="$S(BuildDir)/libs" />
+  </prebuildCopies>
+  
+  <buildGradleAdditions>
+    <insert>
+      ext.appupdate_type = ''
+      
+      if (project.hasProperty('rustore_sdk_type')) {
+        appupdate_type = rustore_sdk_type
+      }
+      
+      dependencies {
+        // RuStore AppUpdate
+        implementation("ru.rustore.sdk:appupdate:0.1.1$appupdate_type")
+        implementation fileTree(include: ["RuStoreUnityAppUpdate${appupdate_type}.aar"], dir: 'src/main/libs')
+      }
+    </insert>
+  </buildGradleAdditions>
+
+</root>
