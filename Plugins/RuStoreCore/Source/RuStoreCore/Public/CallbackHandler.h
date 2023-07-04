@@ -1,9 +1,14 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreMinimal.h"
 
-class RUSTORECORE_API CallbackHandler
+namespace RuStoreSDK
 {
-public:
-    static void AddCallback(TFunction<void()> callback);
-};
+    class RUSTORECORE_API CallbackHandler
+    {
+    public:
+        static void AddCallback(TFunction<void()> callback);
+    };
+}

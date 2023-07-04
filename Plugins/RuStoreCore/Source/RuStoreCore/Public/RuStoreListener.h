@@ -1,34 +1,44 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreMinimal.h"
-#include <memory>
+#include "AndroidJavaObject.h"
 
-using namespace std;
-
-class RUSTORECORE_API RuStoreListener
+namespace RuStoreSDK
 {
-private:
-	static long counter;
+	class RUSTORECORE_API RuStoreListener
+	{
+	private:
+		static long counter;
+		long id = 0;
+		TWeakPtr<RuStoreListener, ESPMode::ThreadSafe> weakPtr;
 
-	long id = 0;
-	weak_ptr<RuStoreListener> weakPtr;
+		FString className = "";
+		FString interfaceName = "";
+		AndroidJavaObject* javaWrapper = nullptr;
 
-public:
-	RuStoreListener();
-	virtual ~RuStoreListener();
+	public:
+		RuStoreListener(FString className, FString interfaceName, bool bAsGlobalRef = false);
+		virtual ~RuStoreListener();
 
-	long GetId();
-	void SetWeakPtr(weak_ptr<RuStoreListener> value);
-	weak_ptr<RuStoreListener> GetWeakPtr();
-};
+		long GetId();
+		void SetWeakPtr(TWeakPtr<RuStoreListener, ESPMode::ThreadSafe> value);
+		TWeakPtr<RuStoreListener, ESPMode::ThreadSafe> GetWeakPtr();
 
-class RUSTORECORE_API RuStoreListenerContainer
-{
-private:
-	TArray<shared_ptr<RuStoreListener>> listeners;
+		AndroidJavaObject* GetJWrapper();
+	};
 
-public:
-	void ListenerBind(RuStoreListener* item);
-	void ListenerUnbind(RuStoreListener* item);
-	void ListenerRemoveAll();
-};
+	class RUSTORECORE_API RuStoreListenerContainer
+	{
+	private:
+		TArray<TSharedPtr<RuStoreListener, ESPMode::ThreadSafe>> listeners;
+
+	public:
+		TSharedPtr<RuStoreListener, ESPMode::ThreadSafe> ListenerBind(RuStoreListener* item);
+		void ListenerUnbind(long id);
+		void ListenerUnbind(RuStoreListener* item);
+		void ListenerUnbind(TSharedPtr<RuStoreListener, ESPMode::ThreadSafe> item);
+		void ListenerRemoveAll();
+	};
+}

@@ -1,4 +1,8 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 #include "AppUpdateErrorListenerImpl.h"
+
+using namespace RuStoreSDK;
 
 FURuStoreError* AppUpdateErrorListenerImpl::ConvertError(AndroidJavaObject* errorObject)
 {

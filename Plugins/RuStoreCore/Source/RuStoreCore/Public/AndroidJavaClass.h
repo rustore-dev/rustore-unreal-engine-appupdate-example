@@ -1,71 +1,68 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreMinimal.h"
 #include "AndroidJavaObject.h"
 
-#if PLATFORM_ANDROID
-#include <../../../Launch/Public/Android/AndroidJNI.h>
-#include <Android/AndroidApplication.h>
-#include <Android/AndroidJava.h>
-#include <jni.h>
-#endif
-
-class RUSTORECORE_API AndroidJavaClass
+namespace RuStoreSDK
 {
-private:
-#if PLATFORM_ANDROID
-    jclass javaClass;
-#endif
-    FString _className;
-    FString _classSignature;
-
-public:
-    AndroidJavaClass(FString className);
-    virtual ~AndroidJavaClass();
-
-    AndroidJavaObject* GetStaticAJObject(const FString fieldName)
+    class RUSTORECORE_API AndroidJavaClass
     {
-        AndroidJavaObject* result = nullptr;
+    private:
+    #if PLATFORM_ANDROID
+        jclass javaClass;
+    #endif
+        FString _className;
+        FString _classSignature;
 
-#if PLATFORM_ANDROID
-        JNIEnv* env = FAndroidApplication::GetJavaEnv();
-        jfieldID javaFieldID = env->GetStaticFieldID(javaClass, TCHAR_TO_ANSI(*fieldName), TCHAR_TO_ANSI(*_classSignature));
-        jobject javaObject = env->NewGlobalRef(env->GetStaticObjectField(javaClass, javaFieldID));
-        result = new AndroidJavaObject(javaClass, javaObject);
-        result->UpdateToGlobalRef();
-#endif
+    public:
+        AndroidJavaClass(FString className);
+        virtual ~AndroidJavaClass();
 
-        return result;
-    }
+        AndroidJavaObject* GetStaticAJObject(const FString fieldName)
+        {
+            AndroidJavaObject* result = nullptr;
 
-    template <typename... Args>
-    void CallStaticVoid(const FString methodName, Args... args)
-    {
-#if PLATFORM_ANDROID
-        JNIEnv* env = FAndroidApplication::GetJavaEnv();
-        FString methodSignature = JavaMethodSignature::MakeVoid(args...);
-        jmethodID javaMethodId = env->GetStaticMethodID(javaClass, TCHAR_TO_ANSI(*methodName), TCHAR_TO_ANSI(*methodSignature));
-        env->CallStaticVoidMethod(javaClass, javaMethodId, JavaTypeConverter::SetValue(env, args)...);
-#endif
-    }
+    #if PLATFORM_ANDROID
+            JNIEnv* env = FAndroidApplication::GetJavaEnv();
+            jfieldID javaFieldID = env->GetStaticFieldID(javaClass, TCHAR_TO_ANSI(*fieldName), TCHAR_TO_ANSI(*_classSignature));
+            jobject javaObject = env->NewGlobalRef(env->GetStaticObjectField(javaClass, javaFieldID));
+            result = new AndroidJavaObject(javaClass, javaObject);
+            result->UpdateToGlobalRef();
+    #endif
 
-    template <typename... Args>
-    FString CallStaticFString(const FString methodName, Args... args)
-    {
-        FString result = "";
-#if PLATFORM_ANDROID
-        JNIEnv* env = FAndroidApplication::GetJavaEnv();
-        FString methodSignature = JavaMethodSignature::MakeFString(args...);
-        jmethodID javaMethodId = env->GetStaticMethodID(javaClass, TCHAR_TO_ANSI(*methodName), TCHAR_TO_ANSI(*methodSignature));
+            return result;
+        }
 
-        FString tag = "rustore";
-        FString msg = methodSignature;
-        __android_log_write(ANDROID_LOG_INFO, TCHAR_TO_UTF8(*tag), TCHAR_TO_UTF8(*msg));
+        template <typename... Args>
+        void CallStaticVoid(const FString methodName, Args... args)
+        {
+    #if PLATFORM_ANDROID
+            JNIEnv* env = FAndroidApplication::GetJavaEnv();
+            FString methodSignature = JavaMethodSignature::MakeVoid(args...);
+            jmethodID javaMethodId = env->GetStaticMethodID(javaClass, TCHAR_TO_ANSI(*methodName), TCHAR_TO_ANSI(*methodSignature));
+            env->CallStaticVoidMethod(javaClass, javaMethodId, JavaTypeConverter::SetValue(env, args)...);
+    #endif
+        }
 
-        jstring strResult = (jstring)env->CallStaticObjectMethod(javaClass, javaMethodId, JavaTypeConverter::SetValue(env, args)...);
-        const char* str = env->GetStringUTFChars(strResult, 0);
-        result = FJavaHelper::FStringFromParam(env, strResult);
-#endif
-        return result;
-    }
-};
+        template <typename... Args>
+        FString CallStaticFString(const FString methodName, Args... args)
+        {
+            FString result = "";
+    #if PLATFORM_ANDROID
+            JNIEnv* env = FAndroidApplication::GetJavaEnv();
+            FString methodSignature = JavaMethodSignature::MakeFString(args...);
+            jmethodID javaMethodId = env->GetStaticMethodID(javaClass, TCHAR_TO_ANSI(*methodName), TCHAR_TO_ANSI(*methodSignature));
+
+            FString tag = "rustore";
+            FString msg = methodSignature;
+            __android_log_write(ANDROID_LOG_INFO, TCHAR_TO_UTF8(*tag), TCHAR_TO_UTF8(*msg));
+
+            jstring strResult = (jstring)env->CallStaticObjectMethod(javaClass, javaMethodId, JavaTypeConverter::SetValue(env, args)...);
+            result = FJavaHelper::FStringFromParam(env, strResult);
+    #endif
+            return result;
+        }
+    };
+}

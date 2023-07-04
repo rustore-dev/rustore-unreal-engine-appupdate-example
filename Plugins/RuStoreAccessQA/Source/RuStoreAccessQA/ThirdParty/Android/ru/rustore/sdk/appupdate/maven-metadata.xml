@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>ru.rustore.sdk</groupId>
+  <artifactId>appupdate</artifactId>
+  <versioning>
+    <latest>0.1.1-QA</latest>
+    <release>0.1.1-QA</release>
+    <versions>
+      <version>0.1.1-QA</version>
+    </versions>
+    <lastUpdated>20230504102545</lastUpdated>
+  </versioning>
+</metadata>

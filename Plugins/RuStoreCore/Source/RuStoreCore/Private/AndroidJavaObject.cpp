@@ -1,7 +1,11 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 #include "AndroidJavaObject.h"
 #include "JavaMethodSignature.h"
 
-AndroidJavaObject::AndroidJavaObject(FString className, bool asGlobalRef)
+using namespace RuStoreSDK;
+
+AndroidJavaObject::AndroidJavaObject(FString className, bool bAsGlobalRef)
 {
 #if PLATFORM_ANDROID
     env = FAndroidApplication::GetJavaEnv();
@@ -11,25 +15,35 @@ AndroidJavaObject::AndroidJavaObject(FString className, bool asGlobalRef)
     jmethodID constructor = FJavaWrapper::FindMethod(env, javaClass, "<init>", TCHAR_TO_ANSI(*methodSignature), false);
 
     javaObject = env->NewObject(javaClass, constructor);
-    if (asGlobalRef) javaObject = env->NewGlobalRef(javaObject);
+    if (bAsGlobalRef) javaObject = env->NewGlobalRef(javaObject);
 
-    isGlobalRef = asGlobalRef;
+    bIsGlobalRef = bAsGlobalRef;
 #endif
 }
 
-AndroidJavaObject::AndroidJavaObject(FString className, long cppPointer, bool asGlobalRef)
+AndroidJavaObject::AndroidJavaObject(FString className, long cppPointer, bool bAsGlobalRef)
 {
 #if PLATFORM_ANDROID
     env = FAndroidApplication::GetJavaEnv();
     javaClass = FAndroidApplication::FindJavaClass(TCHAR_TO_ANSI(*className));
 
-    FString methodSignature = "(J)V";
-    jmethodID constructor = FJavaWrapper::FindMethod(env, javaClass, "<init>", TCHAR_TO_ANSI(*methodSignature), false);
+    if (cppPointer != 0)
+    {
+        FString methodSignature = "(J)V";
+        jmethodID constructor = FJavaWrapper::FindMethod(env, javaClass, "<init>", TCHAR_TO_ANSI(*methodSignature), false);
 
-    javaObject = env->NewObject(javaClass, constructor, (jlong)cppPointer);
-    if (asGlobalRef) javaObject = env->NewGlobalRef(javaObject);
+        javaObject = env->NewObject(javaClass, constructor, (jlong)cppPointer);
+        if (bAsGlobalRef) javaObject = env->NewGlobalRef(javaObject);
 
-    isGlobalRef = asGlobalRef;
+        bIsGlobalRef = bAsGlobalRef;
+    }
+    else
+    {
+        this->className = className;
+        javaObject = NULL;
+
+        bIsGlobalRef = false;
+    }
 #endif
 }
 
@@ -78,9 +92,9 @@ AndroidJavaObject::~AndroidJavaObject()
     
     if (!env->IsSameObject(javaObject, nullptr))
     {
-        if (isGlobalRef) env->DeleteGlobalRef(javaObject);
+        if (bIsGlobalRef) env->DeleteGlobalRef(javaObject);
     }
-    if (isAttachThread) CurrentJavaVM()->DetachCurrentThread();
+    if (bIsAttachThread) CurrentJavaVM()->DetachCurrentThread();
 #endif
 }
 
@@ -94,11 +108,11 @@ bool AndroidJavaObject::AttachCurrentThread()
 #if PLATFORM_ANDROID
     JNIEnv* newEnv = nullptr;
     jint attachResult = CurrentJavaVM()->AttachCurrentThread(&env, nullptr);
-    isAttachThread = (attachResult == JNI_OK);
-    if (isAttachThread) env = newEnv;
+    bIsAttachThread = (attachResult == JNI_OK);
+    if (bIsAttachThread) env = newEnv;
 #endif
 
-    return isAttachThread;
+    return bIsAttachThread;
 }
 
 AndroidJavaObject* AndroidJavaObject::UpdateToGlobalRef()
@@ -176,7 +190,6 @@ FString AndroidJavaObject::GetFString(FString fieldName)
 #if PLATFORM_ANDROID
     jfieldID fieldId = env->GetFieldID(javaClass, TCHAR_TO_ANSI(*fieldName), TCHAR_TO_ANSI(*JavaMethodSignature::getName(result)));
     jstring strResult = (jstring)env->GetObjectField(javaObject, fieldId);
-    const char* str = env->GetStringUTFChars(strResult, 0);
     result = FJavaHelper::FStringFromParam(env, strResult);
 #endif
     return result;

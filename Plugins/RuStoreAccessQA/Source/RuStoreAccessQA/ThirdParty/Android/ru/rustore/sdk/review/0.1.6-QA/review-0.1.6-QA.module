@@ -1,0 +1,118 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "ru.rustore.sdk",
+    "module": "review",
+    "version": "0.1.6-QA",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.5.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "debugVariantDebugApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "ru.rustore.sdk",
+          "module": "core",
+          "version": {
+            "requires": "0.1.8-QA"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "review-0.1.6-QA.aar",
+          "url": "review-0.1.6-QA.aar",
+          "size": 45046,
+          "sha512": "ae475e260973a7e4e40ac8299cd0c40c2f494de57baca37d614411b0fd01313164f2d3047ceea1e4717a179b4fc2681f480d39938fcdeb7c35cec1e070968950",
+          "sha256": "4e716ad0466f1fab8fc586e14a448b0d608f7e1e24b74b2b6d507be796de3914",
+          "sha1": "8bec90703771020d6bf98b07c4f170e7f5de62f0",
+          "md5": "4b6529136b892f7a58456db823e02fc1"
+        }
+      ]
+    },
+    {
+      "name": "debugVariantDebugRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "ru.rustore.sdk",
+          "module": "core",
+          "version": {
+            "requires": "0.1.8-QA"
+          }
+        },
+        {
+          "group": "ru.rustore.sdk",
+          "module": "analytics",
+          "version": {
+            "requires": "0.1.5-QA"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.7.10"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-android",
+          "version": {
+            "requires": "1.6.4"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core-ktx",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "androidx.appcompat",
+          "module": "appcompat",
+          "version": {
+            "requires": "1.5.1"
+          }
+        },
+        {
+          "group": "androidx.activity",
+          "module": "activity-ktx",
+          "version": {
+            "requires": "1.5.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "review-0.1.6-QA.aar",
+          "url": "review-0.1.6-QA.aar",
+          "size": 45046,
+          "sha512": "ae475e260973a7e4e40ac8299cd0c40c2f494de57baca37d614411b0fd01313164f2d3047ceea1e4717a179b4fc2681f480d39938fcdeb7c35cec1e070968950",
+          "sha256": "4e716ad0466f1fab8fc586e14a448b0d608f7e1e24b74b2b6d507be796de3914",
+          "sha1": "8bec90703771020d6bf98b07c4f170e7f5de62f0",
+          "md5": "4b6529136b892f7a58456db823e02fc1"
+        }
+      ]
+    }
+  ]
+}

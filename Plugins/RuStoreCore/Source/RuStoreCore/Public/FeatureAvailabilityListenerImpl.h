@@ -1,26 +1,28 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "URuStoreCore.h"
-#include "FUFeatureAvailabilityResult.h"
+#include "FURuStoreFeatureAvailabilityResult.h"
 #include "ResponseListener.h"
 
-using namespace std;
-
-class RUSTORECORE_API FeatureAvailabilityListenerImpl : public ResponseListener<FUFeatureAvailabilityResult>
+namespace RuStoreSDK
 {
-public:
-	FeatureAvailabilityListenerImpl(
-		TFunction<void(long requestId, FURuStoreError*)> onFailure,
-		TFunction<void(long requestId, FUFeatureAvailabilityResult*)> onSuccess,
-		TFunction<void(RuStoreListener*)> onFinish
-	) : ResponseListener<FUFeatureAvailabilityResult>("com/Plugins/RuStoreCore/FeatureAvailabilityListenerWrapper", "ru/rustore/unitysdk/core/callbacks/FeatureAvailabilityListener", onFailure, onSuccess, onFinish)
-    {
-	}
+	class RUSTORECORE_API FeatureAvailabilityListenerImpl : public ResponseListener<FURuStoreFeatureAvailabilityResult>
+	{
+	protected:
+		FURuStoreFeatureAvailabilityResult* ConvertResponse(AndroidJavaObject* responseObject) override;
 
-	virtual ~FeatureAvailabilityListenerImpl();
+	public:
+		FeatureAvailabilityListenerImpl(
+			TFunction<void(long requestId, TSharedPtr<FURuStoreFeatureAvailabilityResult, ESPMode::ThreadSafe>)> onSuccess,
+			TFunction<void(long requestId, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure,
+			TFunction<void(RuStoreListener*)> onFinish
+		) : ResponseListener<FURuStoreFeatureAvailabilityResult>("com/Plugins/RuStoreCore/FeatureAvailabilityListenerWrapper", "ru/rustore/unitysdk/core/callbacks/FeatureAvailabilityListener", onSuccess, onFailure, onFinish)
+		{
+		}
 
-protected:
-	FUFeatureAvailabilityResult* ConvertResponse(AndroidJavaObject* responseObject) override;
-};
+		virtual ~FeatureAvailabilityListenerImpl();
+	};
+}

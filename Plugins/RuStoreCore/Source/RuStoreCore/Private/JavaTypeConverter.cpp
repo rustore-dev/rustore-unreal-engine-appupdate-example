@@ -1,4 +1,8 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 #include "JavaTypeConverter.h"
+
+using namespace RuStoreSDK;
 
 #if PLATFORM_ANDROID
 jobjectArray JavaTypeConverter::SetValue(JNIEnv* env, TArray<FString>& data)
@@ -14,10 +18,6 @@ jobjectArray JavaTypeConverter::SetValue(JNIEnv* env, TArray<FString>& data)
 
 FString JavaTypeConverter::Convert(JNIEnv* env, jstring data)
 {
-    const char* charString = env->GetStringUTFChars(data, JNI_FALSE);
-    FString fString(charString);
-    env->ReleaseStringUTFChars(data, charString);
-
-    return fString;
+    return FJavaHelper::FStringFromParam(env, data);
 }
 #endif
