@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <prebuildCopies>
+    <copyDir src="$S(PluginDir)/Private/Java" dst="$S(BuildDir)/src/com/Plugins/RuStoreCore" />
+    <log text="Copy Dir 1"/>
+  </prebuildCopies>
+
+  <resourceCopies>
+    <copyDir src="$S(PluginDir)/ThirdParty/Android" dst="$S(BuildDir)/libs" />
+  </resourceCopies>
+
+  <buildGradleAdditions>
+    <insert>
+      ext.rustore_sdk_type = "-QA"
+      
+      repositories {
+        maven {
+          //url uri("D:/VK/RuStore/Plugins/RuStoreAccessQA/Source/RuStoreAccessQA/ThirdParty/Android")
+          url uri("src/main/libs")
+        }
+      }
+    </insert>
+  </buildGradleAdditions>
+
+</root>

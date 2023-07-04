@@ -1,3 +1,5 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 using UnrealBuildTool;
 using System.IO;
 
@@ -7,19 +9,8 @@ public class RuStoreAppUpdate : ModuleRules
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicIncludePaths.AddRange(
-			new string[]
-			{
-				Path.Combine(ModuleDirectory, "Public")
-			}
-		);
-
-		PrivateIncludePaths.AddRange(
-			new string[]
-			{
-				Path.Combine(ModuleDirectory, "Private")
-			}
-		);
+		PublicIncludePaths.AddRange(new string[] { Path.Combine(ModuleDirectory, "Public") });
+		PrivateIncludePaths.AddRange(new string[] { Path.Combine(ModuleDirectory, "Private") });
 
 		PublicDependencyModuleNames.AddRange(
 			new string[]
@@ -41,13 +32,7 @@ public class RuStoreAppUpdate : ModuleRules
 
 		if (Target.Platform == UnrealTargetPlatform.Android)
 		{
-			PrivateDependencyModuleNames.AddRange(
-				new string[]
-				{
-					"Launch",
-				}
-			);
-
+			PrivateDependencyModuleNames.AddRange(new string[] { "Launch" });
 			AdditionalPropertiesForReceipt.Add("AndroidPlugin", Path.Combine(ModuleDirectory, "RuStoreAppUpdate_UPL_Android.xml"));
 		}
 	}

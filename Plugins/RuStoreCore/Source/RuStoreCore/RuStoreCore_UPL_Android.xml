@@ -9,8 +9,11 @@
   
   <prebuildCopies>
     <copyDir src="$S(PluginDir)/Private/Java" dst="$S(BuildDir)/src/com/Plugins/RuStoreCore" />
-    <copyDir src="$S(PluginDir)/ThirdParty/Android" dst="$S(BuildDir)/libs" />
   </prebuildCopies>
+
+  <resourceCopies>
+    <copyDir src="$S(PluginDir)/ThirdParty/Android" dst="$S(BuildDir)/libs" />
+  </resourceCopies>
   
   <gradleProperties>
     <insert>
@@ -20,7 +23,7 @@
       android.enableR8=false
     </insert>
   </gradleProperties>
-
+  
   <buildscriptGradleAdditions>
     <insert>
       dependencies {
@@ -36,26 +39,14 @@
       
         android {
           buildTypes {
-            release {
+            all {
               minifyEnabled false
-              useProguard false
-            }
-            debug {
-              minifyEnabled false
-              useProguard false
-            }
-            debuggame {
-              minifyEnabled false
-              useProguard false
-            }
-            shipping {
-              minifyEnabled false
-              useProguard false
+              useProguard false    
             }
           }
         }
       }
-      
+        
       repositories {
         google()
         mavenCentral()
@@ -63,7 +54,7 @@
           url 'https://artifactory-external.vkpartner.ru/artifactory/maven'
         }
       }
-      
+        
       if (project.hasProperty('rustore_sdk_type')) {
         core_type = rustore_sdk_type
       }
@@ -72,7 +63,7 @@
         // RuStore Core
         implementation("ru.rustore.sdk:core:0.1.8$core_type")
         implementation fileTree(include: ["RuStoreUnityCore${core_type}.aar"], dir: 'src/main/libs')
-        
+      
         implementation("androidx.annotation:annotation:1.0.0")
         implementation("androidx.lifecycle:lifecycle-runtime:2.4.1")
         implementation("com.google.android.material:material:1.6.0")

@@ -1,20 +1,8 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 #include "UnrealPlayerImpl.h"
 
-UnrealPlayerImpl::UnrealPlayerImpl()
-{
-    player = new AndroidJavaObject("com/Plugins/RuStoreCore/UnrealPlayerWrapper", true);
-    player->SetInterfaceName("ru/rustore/unitysdk/core/IPlayerProvider");
-}
-
-UnrealPlayerImpl::~UnrealPlayerImpl()
-{
-    delete player;
-}
-
-AndroidJavaObject* UnrealPlayerImpl::GetPlayer()
-{
-    return player;
-}
+using namespace RuStoreSDK;
 
 #if PLATFORM_ANDROID
 extern "C"

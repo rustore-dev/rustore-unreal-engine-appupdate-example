@@ -1,4 +1,8 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 #include "FeatureAvailabilityListenerImpl.h"
+
+using namespace RuStoreSDK;
 
 FeatureAvailabilityListenerImpl::~FeatureAvailabilityListenerImpl()
 {
@@ -9,7 +13,7 @@ FeatureAvailabilityListenerImpl::~FeatureAvailabilityListenerImpl()
 #endif
 }
 
-FUFeatureAvailabilityResult* FeatureAvailabilityListenerImpl::ConvertResponse(AndroidJavaObject* responseObject)
+FURuStoreFeatureAvailabilityResult* FeatureAvailabilityListenerImpl::ConvertResponse(AndroidJavaObject* responseObject)
 {
     FString resultType = "";
 
@@ -22,7 +26,7 @@ FUFeatureAvailabilityResult* FeatureAvailabilityListenerImpl::ConvertResponse(An
 
     delete javaClassObject;
 
-    auto response = new FUFeatureAvailabilityResult();
+    auto response = new FURuStoreFeatureAvailabilityResult();
 
     if (resultType == "Unavailable")
     {

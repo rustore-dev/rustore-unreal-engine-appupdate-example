@@ -1,39 +1,77 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 #include "RuStoreListener.h"
+
+using namespace RuStoreSDK;
 
 long RuStoreListener::counter = 0;
 
-RuStoreListener::RuStoreListener()
+RuStoreListener::RuStoreListener(FString className, FString interfaceName, bool bAsGlobalRef)
 {
 	id = ++counter;
+
+	this->className = className;
+	this->interfaceName = interfaceName;
+
+	long cppPointer = 0;
+#if PLATFORM_ANDROID
+	cppPointer = (long)this;
+#endif
+	javaWrapper = new AndroidJavaObject(className, cppPointer, bAsGlobalRef);
+	javaWrapper->SetInterfaceName(interfaceName);
 }
 
-RuStoreListener::~RuStoreListener() { }
+RuStoreListener::~RuStoreListener()
+{
+	if (javaWrapper != nullptr)
+	{
+		javaWrapper->CallVoid("DisposeCppPointer");
+		delete javaWrapper;
+	}
+}
 
 long RuStoreListener::GetId()
 {
 	return id;
 }
 
-void RuStoreListener::SetWeakPtr(weak_ptr<RuStoreListener> value)
+void RuStoreListener::SetWeakPtr(TWeakPtr<RuStoreListener, ESPMode::ThreadSafe> value)
 {
 	weakPtr = value;
 }
 
-weak_ptr<RuStoreListener> RuStoreListener::GetWeakPtr()
+TWeakPtr<RuStoreListener, ESPMode::ThreadSafe> RuStoreListener::GetWeakPtr()
 {
 	return weakPtr;
 }
 
-void RuStoreListenerContainer::ListenerBind(RuStoreListener* item)
+AndroidJavaObject* RuStoreListener::GetJWrapper()
 {
-	shared_ptr<RuStoreListener> sharedPtr(item);
+	return javaWrapper;
+}
+
+TSharedPtr<RuStoreListener, ESPMode::ThreadSafe> RuStoreListenerContainer::ListenerBind(RuStoreListener* item)
+{
+	TSharedPtr<RuStoreListener, ESPMode::ThreadSafe> sharedPtr(item);
 	sharedPtr->SetWeakPtr(sharedPtr);
 	listeners.Emplace(sharedPtr);
+
+	return sharedPtr;
+}
+
+void RuStoreListenerContainer::ListenerUnbind(long id)
+{
+	listeners.RemoveAll([&](const TSharedPtr<RuStoreListener, ESPMode::ThreadSafe>& item) { return item->GetId() == id; });
 }
 
 void RuStoreListenerContainer::ListenerUnbind(RuStoreListener* item)
 {
-	listeners.RemoveAll([&](const shared_ptr<RuStoreListener>& item) { return item->GetId() == item->GetId(); });
+	ListenerUnbind(item->GetId());
+}
+
+void RuStoreListenerContainer::ListenerUnbind(TSharedPtr<RuStoreListener, ESPMode::ThreadSafe> item)
+{
+	ListenerUnbind(item->GetId());
 }
 
 void RuStoreListenerContainer::ListenerRemoveAll()

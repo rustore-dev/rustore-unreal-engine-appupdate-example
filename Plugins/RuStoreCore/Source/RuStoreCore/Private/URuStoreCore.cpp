@@ -1,69 +1,60 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 #include "URuStoreCore.h"
 #include "AndroidJavaClass.h"
-#include <memory>
-
-using namespace std;
 
 URuStoreCore* URuStoreCore::_instance = nullptr;
-bool URuStoreCore::_isInstanceInitialized = false;
+bool URuStoreCore::_bIsInstanceInitialized = false;
 
-bool URuStoreCore::getIsInitialized() { return isInitialized; }
+bool URuStoreCore::getIsInitialized() { return bIsInitialized; }
 
 URuStoreCore* URuStoreCore::Instance()
 {
-    if (!_isInstanceInitialized)
+    if (!_bIsInstanceInitialized)
     {
-        _isInstanceInitialized = true;
+        _bIsInstanceInitialized = true;
         _instance = NewObject<URuStoreCore>(GetTransientPackage());
     }
     return _instance;
 }
 
-URuStoreCore::URuStoreCore()
-{
-}
-
-URuStoreCore::~URuStoreCore()
-{
-}
-
 bool URuStoreCore::Init()
 {
     if (!URuStoreCore::IsPlatformSupported()) return false;
-    if (isInitialized) return false;
+    if (bIsInitialized) return false;
 
     _instance->AddToRoot();
 
     unrealPlayer = new UnrealPlayerImpl();
 
-    auto clientJavaClass = make_shared<AndroidJavaClass>("ru/rustore/unitysdk/core/PlayerProvider");
+    auto clientJavaClass = MakeShared<AndroidJavaClass>("ru/rustore/unitysdk/core/PlayerProvider");
     _clientWrapper = clientJavaClass->GetStaticAJObject("INSTANCE");
-    _clientWrapper->CallVoid("setExternalProvider", unrealPlayer->GetPlayer());
+    _clientWrapper->CallVoid("setExternalProvider", unrealPlayer->GetJWrapper());
 
-    isInitialized = true;
+    bIsInitialized = true;
 
-    return isInitialized;
+    return bIsInitialized;
 }
 
 void URuStoreCore::Dispose()
 {
-    if (isInitialized)
+    if (bIsInitialized)
     {
-        isInitialized = false;
+        bIsInitialized = false;
         delete unrealPlayer;
         delete _clientWrapper;
         _instance->RemoveFromRoot();
     }
 }
 
-void URuStoreCore::BeginDestroy()
+void URuStoreCore::ConditionalBeginDestroy()
 {
-    Super::BeginDestroy();
+    Super::ConditionalBeginDestroy();
 
     LogInfo("rustore", "RuStore Core begin destroy");
 
     Dispose();
-    if (_isInstanceInitialized) _isInstanceInitialized = false;
+    if (_bIsInstanceInitialized) _bIsInstanceInitialized = false;
 }
 
 bool URuStoreCore::IsPlatformSupported()
@@ -74,31 +65,59 @@ bool URuStoreCore::IsPlatformSupported()
     return false;
 }
 
-bool URuStoreCore::IsPlatformSupported(TFunction<void(long requestId, FURuStoreError*)> onFailure)
+bool URuStoreCore::IsPlatformSupported(TFunction<void(long requestId, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure)
 {
     if (IsPlatformSupported()) return true;
 
-    FURuStoreError* error = new FURuStoreError();
+    auto error = MakeShared<FURuStoreError, ESPMode::ThreadSafe>();
     error->name = "RuStore Error";
     error->description = "Unsupported platform";
     
-    onFailure(-1, error);
+    onFailure(0, error);
     
     return false;
 }
 
 void URuStoreCore::ShowToast(FString message)
 {
-    auto javaClass = make_shared<AndroidJavaClass>("com/Plugins/RuStoreCore/RuStoreCoreUtils");
-    auto activity = make_shared<JavaActivity>();
+    auto javaClass = MakeShared<AndroidJavaClass>("com/Plugins/RuStoreCore/RuStoreCoreUtils");
+    auto activity = MakeShared<JavaActivity>();
 
-    javaClass->CallStaticVoid("showToast", activity.get(), message);
+    javaClass->CallStaticVoid("showToast", &activity.Get(), message);
+}
+
+void URuStoreCore::LogVerbose(FString tag, FString message)
+{
+#if PLATFORM_ANDROID
+    __android_log_write(ANDROID_LOG_VERBOSE, TCHAR_TO_UTF8(*tag), TCHAR_TO_UTF8(*message));
+#endif
+}
+
+void URuStoreCore::LogDebug(FString tag, FString message)
+{
+#if PLATFORM_ANDROID
+    __android_log_write(ANDROID_LOG_DEBUG, TCHAR_TO_UTF8(*tag), TCHAR_TO_UTF8(*message));
+#endif
 }
 
 void URuStoreCore::LogInfo(FString tag, FString message)
 {
 #if PLATFORM_ANDROID
 	__android_log_write(ANDROID_LOG_INFO, TCHAR_TO_UTF8(*tag), TCHAR_TO_UTF8(*message));
+#endif
+}
+
+void URuStoreCore::LogWarn(FString tag, FString message)
+{
+#if PLATFORM_ANDROID
+    __android_log_write(ANDROID_LOG_WARN, TCHAR_TO_UTF8(*tag), TCHAR_TO_UTF8(*message));
+#endif
+}
+
+void URuStoreCore::LogError(FString tag, FString message)
+{
+#if PLATFORM_ANDROID
+    __android_log_write(ANDROID_LOG_ERROR, TCHAR_TO_UTF8(*tag), TCHAR_TO_UTF8(*message));
 #endif
 }
 

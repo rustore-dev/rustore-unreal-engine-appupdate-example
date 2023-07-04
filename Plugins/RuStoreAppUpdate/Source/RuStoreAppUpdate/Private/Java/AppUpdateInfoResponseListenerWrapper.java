@@ -1,13 +1,15 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 package com.Plugins.RuStoreAppUpdate;
 
+import com.Plugins.RuStoreCore.IRuStoreListener;
 import ru.rustore.unitysdk.appupdate.callbacks.AppUpdateInfoResponseListener;
 import ru.rustore.sdk.appupdate.model.AppUpdateInfo;
 
-import android.util.Log;
-
-public class AppUpdateInfoResponseListenerWrapper implements AppUpdateInfoResponseListener
+public class AppUpdateInfoResponseListenerWrapper implements IRuStoreListener, AppUpdateInfoResponseListener
 {
-    private long cppPointer;
+    private Object mutex = new Object();
+    private long cppPointer = 0;
 
     private native void NativeOnFailure(long pointer, Throwable throwable);
     private native void NativeOnSuccess(long pointer, AppUpdateInfo response);
@@ -18,13 +20,25 @@ public class AppUpdateInfoResponseListenerWrapper implements AppUpdateInfoRespon
 
     @Override
     public void OnFailure(Throwable throwable) {
-        Log.e("rustore", "AppUpdateInfo: Error message");
-        NativeOnFailure(cppPointer, throwable);
+        synchronized (mutex) {
+            if (cppPointer != 0) {
+                NativeOnFailure(cppPointer, throwable);
+            }
+        }
     }
 
     @Override
     public void OnSuccess(AppUpdateInfo response) {
-        Log.e("rustore", "AppUpdateInfo: Success message");
-        NativeOnSuccess(cppPointer, response);
+        synchronized (mutex) {
+            if (cppPointer != 0) {
+                NativeOnSuccess(cppPointer, response);
+            }
+        }
+    }
+
+    public void DisposeCppPointer() {
+        synchronized (mutex) {
+            cppPointer = 0;
+        }
     }
 }

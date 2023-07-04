@@ -1,31 +1,27 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 #include "URuStoreAppUpdateManager.h"
 #include "AppUpdateInfoResponseListenerImpl.h"
 #include "UpdateFlowResultListenerImpl.h"
 #include "AppUpdateErrorListenerImpl.h"
 #include "URuStoreCore.h"
 
-using namespace std;
+using namespace RuStoreSDK;
 
 const FString URuStoreAppUpdateManager::PluginVersion = "0.1";
-
 URuStoreAppUpdateManager* URuStoreAppUpdateManager::_instance = nullptr;
-bool URuStoreAppUpdateManager::_isInstanceInitialized = false;
+bool URuStoreAppUpdateManager::_bIsInstanceInitialized = false;
 
-bool URuStoreAppUpdateManager::getIsInitialized() { return isInitialized; }
-
-URuStoreAppUpdateManager::URuStoreAppUpdateManager()
+bool URuStoreAppUpdateManager::getIsInitialized()
 {
-}
-
-URuStoreAppUpdateManager::~URuStoreAppUpdateManager()
-{
+    return bIsInitialized;
 }
 
 URuStoreAppUpdateManager* URuStoreAppUpdateManager::Instance()
 {
-    if (!_isInstanceInitialized)
+    if (!_bIsInstanceInitialized)
     {
-        _isInstanceInitialized = true;
+        _bIsInstanceInitialized = true;
         _instance = NewObject<URuStoreAppUpdateManager>(GetTransientPackage());
     }
     return _instance;
@@ -33,9 +29,9 @@ URuStoreAppUpdateManager* URuStoreAppUpdateManager::Instance()
 
 void URuStoreAppUpdateManager::SetAllowNativeErrorHandling(bool value)
 {
-    _allowNativeErrorHandling = value;
+    _bAllowNativeErrorHandling = value;
 
-    if (isInitialized)
+    if (bIsInitialized)
     {
         _clientWrapper->CallVoid("setErrorHandling", value);
     }
@@ -44,123 +40,115 @@ void URuStoreAppUpdateManager::SetAllowNativeErrorHandling(bool value)
 bool URuStoreAppUpdateManager::Init()
 {
     if (!URuStoreCore::IsPlatformSupported()) return false;
-    if (isInitialized) return false;
+    if (bIsInitialized) return false;
+
+    _instance->AddToRoot();
 
     URuStoreCore::Instance()->Init();
 
-    AndroidJavaClass* clientJavaClass = new AndroidJavaClass("ru/rustore/unitysdk/appupdate/RuStoreUnityAppUpdateManager");
+    auto clientJavaClass = MakeShared<AndroidJavaClass>("ru/rustore/unitysdk/appupdate/RuStoreUnityAppUpdateManager");
     _clientWrapper = clientJavaClass->GetStaticAJObject("INSTANCE");
     _clientWrapper->CallVoid("init");
 
-    isInitialized = true;
+    bIsInitialized = true;
 
-    return isInitialized;
+    RegisterListener(this);
+
+    return true;
 }
 
 void URuStoreAppUpdateManager::Dispose()
 {
-    if (isInitialized)
+    if (bIsInitialized)
     {
-        isInitialized = false;
+        UnregisterListener(this);
+
+        bIsInitialized = false;
         ListenerRemoveAll();
         delete _clientWrapper;
         _instance->RemoveFromRoot();
     }
-
-    URuStoreCore::LogInfo("rustore_debug", "URuStoreAppUpdateManager Dispose");
 }
 
-void URuStoreAppUpdateManager::BeginDestroy()
+void URuStoreAppUpdateManager::ConditionalBeginDestroy()
 {
-    Super::BeginDestroy();
-
-    URuStoreCore::LogInfo("rustore_debug", "URuStoreAppUpdateManager begin destroy");
+    Super::ConditionalBeginDestroy();
 
     Dispose();
-    if (_isInstanceInitialized) _isInstanceInitialized = false;
+    if (_bIsInstanceInitialized) _bIsInstanceInitialized = false;
 }
 
-void URuStoreAppUpdateManager::OnStateUpdated(FUInstallState state)
-{
-
-}
-
-long URuStoreAppUpdateManager::GetAppUpdateInfo(TFunction<void(long, FURuStoreError*)> onFailure, TFunction<void(long, FUAppUpdateInfo*)> onSuccess)
+long URuStoreAppUpdateManager::GetAppUpdateInfo(TFunction<void(long, TSharedPtr<FURuStoreAppUpdateInfo, ESPMode::ThreadSafe>)> onSuccess, TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure)
 {
     if (!URuStoreCore::IsPlatformSupported(onFailure)) return 0;
-    if (!isInitialized) return 0;
+    if (!bIsInitialized) return 0;
 
-    auto listener = new AppUpdateInfoResponseListenerImpl(onFailure, onSuccess, [this](RuStoreListener* item) { ListenerUnbind(item); });
-    ListenerBind((RuStoreListener*)listener);
+    auto listener = ListenerBind(new AppUpdateInfoResponseListenerImpl(onSuccess, onFailure, [this](RuStoreListener* item) { ListenerUnbind(item); }));
     _clientWrapper->CallVoid("getAppUpdateInfo", listener->GetJWrapper());
 
     return listener->GetId();
 }
 
-bool URuStoreAppUpdateManager::RegisterListener(IInstallStateUpdateListener* listener)
+int64 URuStoreAppUpdateManager::RegisterListener(TScriptInterface<IRuStoreInstallStateUpdateListenerInterface> stateListener)
+{
+    if (!URuStoreCore::IsPlatformSupported()) return 0;
+    if (!bIsInitialized) return 0;
+
+    if (!stateListeners.Contains(stateListener.GetInterface()))
+    {
+        auto listener = ListenerBind(new InstallStateUpdateListenerImpl(
+            [stateListener](long listenerId, TSharedPtr<FURuStoreInstallState, ESPMode::ThreadSafe> state) {
+                ((IRuStoreInstallStateUpdateListenerInterface*)stateListener.GetInterface())->OnStateUpdated_Implementation(listenerId, *state);
+            }
+        ));
+
+        stateListeners.Add(stateListener.GetInterface(), listener);
+
+        _clientWrapper->CallVoid("registerListener", listener->GetJWrapper());
+
+        return listener->GetId();
+    }
+
+    return 0;
+}
+
+bool URuStoreAppUpdateManager::UnregisterListener(TScriptInterface<IRuStoreInstallStateUpdateListenerInterface> stateListener)
 {
     if (!URuStoreCore::IsPlatformSupported()) return false;
-    if (!isInitialized) return false;
+    if (!bIsInitialized) return false;
 
-    InstallStateUpdateListener* stateListener = stateListeners.FindRef(listener);
-    if (!stateListener)
+    if (stateListeners.Contains(stateListener.GetInterface()))
     {
-        stateListener = new InstallStateUpdateListener(listener);
-        stateListeners.Add(listener, stateListener);
-        _clientWrapper->CallVoid("registerListener", stateListener->jlistener);
-        
+        auto listener = stateListeners[stateListener.GetInterface()];
+        _clientWrapper->CallVoid("unregisterListener", listener->GetJWrapper());
+
+        ListenerUnbind(listener);
+
         return true;
     }
 
     return false;
 }
 
-bool URuStoreAppUpdateManager::UnregisterListener(IInstallStateUpdateListener* listener)
-{
-    if (!URuStoreCore::IsPlatformSupported()) return false;
-    if (!isInitialized) return false;
-
-    InstallStateUpdateListener* stateListener = stateListeners.FindRef(listener);
-    if (stateListener)
-    {
-        auto item = stateListeners[listener];
-        _clientWrapper->CallVoid("unregisterListener", item->jlistener);
-        stateListeners.Remove(listener);
-
-        return true;
-    }
-
-    return false;
-}
-
-long URuStoreAppUpdateManager::StartUpdateFlow(TFunction<void(long, FURuStoreError*)> onFailure, TFunction<void(long, EUUpdateFlowResult)> onSuccess)
+long URuStoreAppUpdateManager::StartUpdateFlow(TFunction<void(long, EURuStoreUpdateFlowResult)> onSuccess, TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure)
 {
     if (!URuStoreCore::IsPlatformSupported(onFailure)) return 0;
-    if (!isInitialized) return 0;
+    if (!bIsInitialized) return 0;
 
-    auto listener = new UpdateFlowResultListenerImpl(
-        onFailure,
-        [this, onSuccess](long requestId, int result) {
-            if (onSuccess != nullptr)
-            {
-                onSuccess(requestId, (EUUpdateFlowResult)(result+1));
-            }
-        },
-        [this](RuStoreListener* item) { ListenerUnbind(item); }
-    );
-    ListenerBind((RuStoreListener*)listener);
+    auto _onSuccess = [onSuccess](long requestId, int result) { onSuccess(requestId, (EURuStoreUpdateFlowResult)(result)); };
+
+    auto listener = ListenerBind(new UpdateFlowResultListenerImpl(_onSuccess, onFailure, [this](RuStoreListener* item) { ListenerUnbind(item); }));
     _clientWrapper->CallVoid("startUpdateFlow", listener->GetJWrapper());
 
     return listener->GetId();
 }
 
-long URuStoreAppUpdateManager::CompleteUpdate(TFunction<void(long, FURuStoreError*)> onFailure)
+long URuStoreAppUpdateManager::CompleteUpdate(TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure)
 {
     if (!URuStoreCore::IsPlatformSupported(onFailure)) return 0;
-    if (!isInitialized) return 0;
+    if (!bIsInitialized) return 0;
 
-    auto listener = new AppUpdateErrorListenerImpl(onFailure, [this](RuStoreListener* item) { ListenerUnbind(item); });
-    ListenerBind((RuStoreListener*)listener);
+    auto listener = ListenerBind(new AppUpdateErrorListenerImpl(onFailure, [this](RuStoreListener* item) { ListenerUnbind(item); }));
     _clientWrapper->CallVoid("completeUpdate", listener->GetJWrapper());
 
     return listener->GetId();
@@ -169,11 +157,11 @@ long URuStoreAppUpdateManager::CompleteUpdate(TFunction<void(long, FURuStoreErro
 void URuStoreAppUpdateManager::GetAppUpdateInfo(int64& requestId)
 {
     requestId = GetAppUpdateInfo(
-        [this](long requestId, FURuStoreError* error) {
-            OnGetAppUpdateInfoError.Broadcast(requestId, *error);
-        },
-        [this](long requestId, FUAppUpdateInfo* response) {
+        [this](long requestId, TSharedPtr<FURuStoreAppUpdateInfo, ESPMode::ThreadSafe> response) {
             OnGetAppUpdateInfoResponse.Broadcast(requestId, *response);
+        },
+        [this](long requestId, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe> error) {
+            OnGetAppUpdateInfoError.Broadcast(requestId, *error);
         }
     );
 }
@@ -181,11 +169,11 @@ void URuStoreAppUpdateManager::GetAppUpdateInfo(int64& requestId)
 void URuStoreAppUpdateManager::StartUpdateFlow(int64& requestId)
 {
     requestId = StartUpdateFlow(
-        [this](long requestId, FURuStoreError* error) {
-            OnStartUpdateFlowError.Broadcast(requestId, *error);
-        },
-        [this](long requestId, EUUpdateFlowResult response) {
+        [this](long requestId, EURuStoreUpdateFlowResult response) {
             OnStartUpdateFlowResponse.Broadcast(requestId, response);
+        },
+        [this](long requestId, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe> error) {
+            OnStartUpdateFlowError.Broadcast(requestId, *error);
         }
     );
 }
@@ -193,8 +181,13 @@ void URuStoreAppUpdateManager::StartUpdateFlow(int64& requestId)
 void URuStoreAppUpdateManager::CompleteUpdate(int64& requestId)
 {
     requestId = CompleteUpdate(
-        [this](long requestId, FURuStoreError* error) {
+        [this](long requestId, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe> error) {
             OnCompleteUpdateError.Broadcast(requestId, *error);
         }
     );
+}
+
+void URuStoreAppUpdateManager::OnStateUpdated_Implementation(int64 listenerId, FURuStoreInstallState& state)
+{
+    OnStateUpdatedInstanceEvent.Broadcast(listenerId, state);
 }

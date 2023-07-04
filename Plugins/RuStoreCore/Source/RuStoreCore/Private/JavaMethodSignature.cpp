@@ -1,4 +1,8 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 #include "JavaMethodSignature.h"
+
+using namespace RuStoreSDK;
 
 template <typename T>
 FString JavaMethodSignature::getName(T) { return TEXT(""); }

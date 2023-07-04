@@ -3,9 +3,12 @@
 
   <prebuildCopies>
     <copyDir src="$S(PluginDir)/Private/Java" dst="$S(BuildDir)/src/com/Plugins/RuStoreAppUpdate" />
-    <copyDir src="$S(PluginDir)/ThirdParty/Android" dst="$S(BuildDir)/libs" />
   </prebuildCopies>
-  
+
+  <resourceCopies>
+    <copyDir src="$S(PluginDir)/ThirdParty/Android" dst="$S(BuildDir)/libs" />
+  </resourceCopies>
+
   <buildGradleAdditions>
     <insert>
       ext.appupdate_type = ''

@@ -1,92 +1,50 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ErrorListener.h"
 
-#include "AndroidJavaClass.h"
-#include "CallbackHandler.h"
-#include "FURuStoreError.h"
-#include "RuStoreListener.h"
-
-template <typename T>
-class SimpleResponseListenerT : public RuStoreListener
+namespace RuStoreSDK
 {
-private:
-    TFunction<void(long, FURuStoreError*)> _onFailure;
-    TFunction<void(long, T)> _onSuccess;
-    TFunction<void(RuStoreListener*)> _onFinish;
-
-    FString className = "";
-    FString interfaceName = "";
-
-    AndroidJavaObject* javaWrapper = nullptr;
-
-protected:
-    SimpleResponseListenerT(FString className, FString interfaceName, TFunction<void(long, FURuStoreError*)> onFailure, TFunction<void(long, T)> onSuccess, TFunction<void(RuStoreListener*)> onFinish)
+    template <typename T>
+    class SimpleResponseListenerT : public ErrorListener
     {
-        _onFailure = onFailure;
-        _onSuccess = onSuccess;
-        _onFinish = onFinish;
+    private:
+        TFunction<void(long, T)> _onSuccess;
 
-        this->className = className;
-        this->interfaceName = interfaceName;
-
-        long cppPointer = 0;
-#if PLATFORM_ANDROID
-        cppPointer = (long)this;
-#endif
-        javaWrapper = new AndroidJavaObject(className, cppPointer, false);
-        javaWrapper->SetInterfaceName(interfaceName);
-    }
-
-    ~SimpleResponseListenerT()
-    {
-        if (javaWrapper != nullptr)
+    protected:
+        SimpleResponseListenerT(
+            FString className,
+            FString interfaceName,
+            TFunction<void(long, T)> onSuccess,
+            TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure,
+            TFunction<void(RuStoreListener*)> onFinish
+        ) : ErrorListener(className, interfaceName, onFailure, onFinish)
         {
-            javaWrapper->CallVoid("DisposeCppPointer");
-            delete javaWrapper;
+            _onSuccess = onSuccess;
         }
-    }
 
-    virtual FURuStoreError* ConvertError(AndroidJavaObject* errorObject)
-    {
-        FURuStoreError* error = new FURuStoreError();
+        virtual ~SimpleResponseListenerT() { }
 
-        error->name = errorObject->CallJavaClassFString("getSimpleName");
-        error->description = errorObject->CallFString("getMessage");
+        virtual T ConvertResponse(T response)
+        {
+            return response;
+        }
 
-        return error;
-    }
+    public:
+        void OnSuccess(T response)
+        {
+            auto _response = ConvertResponse(response);
 
-public:
-    AndroidJavaObject* GetJWrapper()
-    {
-        return javaWrapper;
-    }
-    
-    void OnFailure(AndroidJavaObject* errorObject)
-    {
-        auto error = TSharedPtr<FURuStoreError>(ConvertError(errorObject));
-        delete errorObject;
-
-        auto listener = GetWeakPtr();
-        CallbackHandler::AddCallback([this, listener, error]() {
-            if (!listener.expired())
-            {
-                this->_onFailure(this->GetId(), error.Get());
-                this->_onFinish(this);
-            }
-        });
-    }
-
-    void OnSuccess(T response)
-    {
-        auto listener = GetWeakPtr();
-        CallbackHandler::AddCallback([this, listener, response]() {
-            if (!listener.expired())
-            {
-                this->_onSuccess(this->GetId(), response);
-                this->_onFinish(this);
-            }
-        });
-    }
-};
+            auto listener = GetWeakPtr();
+            CallbackHandler::AddCallback([this, listener, _response]() {
+                if (listener.IsValid())
+                {
+                    this->_onSuccess(this->GetId(), _response);
+                    this->_onFinish(this);
+                }
+            });
+        }
+    };
+}

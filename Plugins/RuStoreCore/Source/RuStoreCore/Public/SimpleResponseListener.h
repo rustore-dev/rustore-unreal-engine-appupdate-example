@@ -1,32 +1,32 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CallbackHandler.h"
-#include "AndroidJavaObject.h"
-#include "FURuStoreError.h"
-#include "RuStoreListener.h"
+#include "ErrorListener.h"
 
-class RUSTORECORE_API SimpleResponseListener : public RuStoreListener
+namespace RuStoreSDK
 {
-private:
-    TFunction<void(long requestId, FURuStoreError*)> _onFailure;
-    TFunction<void(long requestId)> _onSuccess;
-    TFunction<void(RuStoreListener*)> _onFinish;
+    class RUSTORECORE_API SimpleResponseListener : public ErrorListener
+    {
+    private:
+        TFunction<void(long requestId)> _onSuccess;
 
-    FString className = "";
-    FString interfaceName = "";
+    protected:
+        SimpleResponseListener(
+            FString className,
+            FString interfaceName,
+            TFunction<void(long)> onSuccess,
+            TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure,
+            TFunction<void(RuStoreListener*)> onFinish
+        ) : ErrorListener(className, interfaceName, onFailure, onFinish)
+        {
+            _onSuccess = onSuccess;
+        }
 
-    AndroidJavaObject* javaWrapper = nullptr;
+        virtual ~SimpleResponseListener();
 
-protected:
-    SimpleResponseListener(FString className, FString interfaceName, TFunction<void(long, FURuStoreError*)> onFailure, TFunction<void(long)> onSuccess, TFunction<void(RuStoreListener*)> onFinish);
-    virtual ~SimpleResponseListener();
-
-    virtual FURuStoreError* ConvertError(AndroidJavaObject* errorObject);
-
-public:
-    AndroidJavaObject* GetJWrapper();
-
-    void OnFailure(AndroidJavaObject* errorObject);
-    void OnSuccess();
-};
+    public:
+        void OnSuccess();
+    };
+}
