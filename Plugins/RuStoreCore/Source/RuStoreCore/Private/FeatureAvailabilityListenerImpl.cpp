@@ -6,11 +6,6 @@ using namespace RuStoreSDK;
 
 FeatureAvailabilityListenerImpl::~FeatureAvailabilityListenerImpl()
 {
-    FString tag = "rustore_debug";
-    FString msg = "~FeatureAvailabilityListenerImpl";
-#if PLATFORM_ANDROID
-    __android_log_write(ANDROID_LOG_INFO, TCHAR_TO_UTF8(*tag), TCHAR_TO_UTF8(*msg));
-#endif
 }
 
 FURuStoreFeatureAvailabilityResult* FeatureAvailabilityListenerImpl::ConvertResponse(AndroidJavaObject* responseObject)

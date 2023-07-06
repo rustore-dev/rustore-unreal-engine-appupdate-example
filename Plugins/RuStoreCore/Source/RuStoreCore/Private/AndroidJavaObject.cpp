@@ -235,6 +235,7 @@ AndroidJavaObject* AndroidJavaObject::GetAJObject(FString fieldName, FString sig
     }
 
     AndroidJavaObject* result = nullptr;
+
 #if PLATFORM_ANDROID
     jfieldID fieldId = env->GetFieldID(javaClass, TCHAR_TO_ANSI(*fieldName), TCHAR_TO_ANSI(*signature));
     
@@ -245,6 +246,22 @@ AndroidJavaObject* AndroidJavaObject::GetAJObject(FString fieldName, FString sig
         result->UpdateToGlobalRef();
     }
 #endif
+
+    return result;
+}
+
+AndroidJavaObject* AndroidJavaObject::GetAJObjectArrayElement(int i)
+{
+    AndroidJavaObject* result = nullptr;
+
+#if PLATFORM_ANDROID
+    jobjectArray arr = reinterpret_cast<jobjectArray>(javaObject);
+    jobject element = env->GetObjectArrayElement(arr, i);
+
+    result = new AndroidJavaObject(element);
+    result->UpdateToGlobalRef();
+#endif
+
     return result;
 }
 

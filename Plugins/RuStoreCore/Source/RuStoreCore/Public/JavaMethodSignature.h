@@ -87,5 +87,11 @@ namespace RuStoreSDK
         {
             return Constuct(getName(args)...) + "Ljava/lang/Object;";
         }
+
+        template <typename... Args>
+        static FString MakeSpecificAJObject(FString signature, Args... args)
+        {
+            return Constuct(getName(args)...) + signature;
+        }
     };
 }
