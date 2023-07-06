@@ -25,12 +25,15 @@ private:
 	UnrealPlayerImpl* unrealPlayer = nullptr;
 
 public:
+	static const FString PluginVersion;
+
 	UFUNCTION(BlueprintCallable, Category = "RuStore Core")
-	bool getIsInitialized();
+	bool getbIsInitialized();
 
 	UFUNCTION(BlueprintCallable, Category = "RuStore Core")
 	static URuStoreCore* Instance();
 
+	UFUNCTION(BlueprintCallable, Category = "RuStore Core")
 	static bool IsPlatformSupported();
 	static bool IsPlatformSupported(TFunction<void(long requestId, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure);
 

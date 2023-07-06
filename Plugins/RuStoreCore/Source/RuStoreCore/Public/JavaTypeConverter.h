@@ -13,7 +13,7 @@ namespace RuStoreSDK
     class JavaActivity;
     class JavaApplication;
 
-    class JavaTypeConverter
+    class RUSTORECORE_API JavaTypeConverter
     {
     public:
 #if PLATFORM_ANDROID

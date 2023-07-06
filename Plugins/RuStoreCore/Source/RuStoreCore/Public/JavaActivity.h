@@ -5,13 +5,6 @@
 #include "CoreMinimal.h"
 #include "IAndroidClasses.h"
 
-#if PLATFORM_ANDROID
-#include <../../../Launch/Public/Android/AndroidJNI.h>
-#include <Android/AndroidApplication.h>
-#include <Android/AndroidJava.h>
-#include <jni.h>
-#endif
-
 namespace RuStoreSDK
 {
     class RUSTORECORE_API JavaActivity : public IAndroidClasses

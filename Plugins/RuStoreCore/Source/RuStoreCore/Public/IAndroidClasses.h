@@ -12,7 +12,7 @@
 
 namespace RuStoreSDK
 {
-    class IAndroidClasses
+    class RUSTORECORE_API IAndroidClasses
     {
     public:
         virtual FString GetName() = 0;

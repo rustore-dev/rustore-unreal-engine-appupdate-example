@@ -54,6 +54,7 @@ namespace RuStoreSDK
         FString GetFString(FString fieldName);
         int GetEnum(FString fieldName, FString signature);
         AndroidJavaObject* GetAJObject(FString fieldName, FString signature = "");
+        AndroidJavaObject* GetAJObjectArrayElement(int i);
 
         void SetInterfaceName(FString asInterface);
         bool AttachCurrentThread();
@@ -148,6 +149,21 @@ namespace RuStoreSDK
             result = new AndroidJavaObject(localRef);
             result->UpdateToGlobalRef();
     #endif
+            return result;
+        }
+
+        template<typename... Args>
+        AndroidJavaObject* CallSpecificAJObject(FString methodName, FString signature, Args... args)
+        {
+            AndroidJavaObject* result = nullptr;
+#if PLATFORM_ANDROID
+            FString methodSignature = JavaMethodSignature::MakeSpecificAJObject(signature, args...);
+            jmethodID javaMethodID = FJavaWrapper::FindMethod(env, javaClass, TCHAR_TO_ANSI(*methodName), TCHAR_TO_ANSI(*methodSignature), false);
+
+            jobject localRef = (jobject)FJavaWrapper::CallObjectMethod(env, javaObject, javaMethodID, JavaTypeConverter::SetValue(env, args)...);
+            result = new AndroidJavaObject(localRef);
+            result->UpdateToGlobalRef();
+#endif
             return result;
         }
     };
