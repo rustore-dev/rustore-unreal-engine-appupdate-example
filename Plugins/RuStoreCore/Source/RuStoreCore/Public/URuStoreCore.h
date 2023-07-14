@@ -28,7 +28,7 @@ public:
 	static const FString PluginVersion;
 
 	UFUNCTION(BlueprintCallable, Category = "RuStore Core")
-	bool getbIsInitialized();
+	bool GetIsInitialized();
 
 	UFUNCTION(BlueprintCallable, Category = "RuStore Core")
 	static URuStoreCore* Instance();
