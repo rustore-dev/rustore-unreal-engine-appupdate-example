@@ -52,8 +52,6 @@ void URuStoreCore::ConditionalBeginDestroy()
 {
     Super::ConditionalBeginDestroy();
 
-    LogInfo("rustore", "RuStore Core begin destroy");
-
     Dispose();
     if (_bIsInstanceInitialized) _bIsInstanceInitialized = false;
 }
@@ -120,5 +118,23 @@ bool URuStoreCore::CompareId(int64 A, int64 B)
 void URuStoreCore::CopyToClipboard(FString text)
 {
     auto javaClass = MakeShared<AndroidJavaClass>("com/Plugins/RuStoreCore/RuStoreCoreUtils");
-    javaClass->CallStaticVoid("CopyToClipBoard", text);
+    auto activity = MakeShared<JavaActivity>();
+
+    javaClass->CallStaticVoid("CopyToClipboard", &activity.Get(), text);
+}
+
+void URuStoreCore::GetFromClipboard(FString& text)
+{
+    auto javaClass = MakeShared<AndroidJavaClass>("com/Plugins/RuStoreCore/RuStoreCoreUtils");
+    auto activity = MakeShared<JavaActivity>();
+
+    text = javaClass->CallStaticFString("GetFromClipboard", &activity.Get());
+}
+
+void URuStoreCore::GetStringResources(FString name, FString& value)
+{
+    auto javaClass = MakeShared<AndroidJavaClass>("com/Plugins/RuStoreCore/RuStoreCoreUtils");
+    auto application = MakeShared<JavaApplication>();
+
+    value = javaClass->CallStaticFString("GetStringResources", &application.Get(), name);
 }

@@ -3,10 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/Object.h"
-
-#include "UnrealPlayerImpl.h"
 #include "FURuStoreError.h"
+#include "UnrealPlayerImpl.h"
 #include "URuStoreCore.generated.h"
 
 using namespace RuStoreSDK;
@@ -68,4 +66,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "RuStore Core")
 	static void CopyToClipboard(FString text);
+
+	UFUNCTION(BlueprintCallable, Category = "RuStore Core")
+	static void GetFromClipboard(FString& text);
+
+	UFUNCTION(BlueprintCallable, Category = "RuStore Core")
+	static void GetStringResources(FString name, FString& value);
 };

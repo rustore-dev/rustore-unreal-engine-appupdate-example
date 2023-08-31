@@ -21,3 +21,5 @@ FString JavaMethodSignature::getName(float) { return TEXT("F"); }
 FString JavaMethodSignature::getName(double) { return TEXT("D"); }
 FString JavaMethodSignature::getName(FString&) { return TEXT("Ljava/lang/String;"); }
 FString JavaMethodSignature::getName(TArray<FString>&) { return TEXT("[Ljava/lang/String;"); }
+FString JavaMethodSignature::getName(TArray<uint8>&) { return TEXT("[B"); }
+FString JavaMethodSignature::getName(TArray<uint8>*) { return TEXT("[B"); }
