@@ -54,11 +54,6 @@ namespace RuStoreSDK
             JNIEnv* env = FAndroidApplication::GetJavaEnv();
             FString methodSignature = JavaMethodSignature::MakeFString(args...);
             jmethodID javaMethodId = env->GetStaticMethodID(javaClass, TCHAR_TO_ANSI(*methodName), TCHAR_TO_ANSI(*methodSignature));
-
-            FString tag = "rustore";
-            FString msg = methodSignature;
-            __android_log_write(ANDROID_LOG_INFO, TCHAR_TO_UTF8(*tag), TCHAR_TO_UTF8(*msg));
-
             jstring strResult = (jstring)env->CallStaticObjectMethod(javaClass, javaMethodId, JavaTypeConverter::SetValue(env, args)...);
             result = FJavaHelper::FStringFromParam(env, strResult);
     #endif

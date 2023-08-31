@@ -86,10 +86,6 @@ jobject AndroidJavaObject::GetJObject()
 AndroidJavaObject::~AndroidJavaObject()
 {
 #if PLATFORM_ANDROID
-    FString tag = "rustore";
-    FString msg = className;
-    __android_log_write(ANDROID_LOG_INFO, TCHAR_TO_UTF8(*tag), TCHAR_TO_UTF8(*msg));
-    
     if (!env->IsSameObject(javaObject, nullptr))
     {
         if (bIsGlobalRef) env->DeleteGlobalRef(javaObject);

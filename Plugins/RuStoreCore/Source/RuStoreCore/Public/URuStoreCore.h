@@ -65,4 +65,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "RuStore Core")
 	static bool CompareId(int64 A, int64 B);
+
+	UFUNCTION(BlueprintCallable, Category = "RuStore Core")
+	static void CopyToClipboard(FString text);
 };
