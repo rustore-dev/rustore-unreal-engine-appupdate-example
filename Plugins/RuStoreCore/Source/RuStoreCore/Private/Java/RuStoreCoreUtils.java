@@ -33,4 +33,12 @@ public class RuStoreCoreUtils
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 		return formatter.format(date);
 	}
+
+	@Keep
+	public static void CopyToClipBoard(String text)
+	{
+		StringSelection selection = new StringSelection(text);
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		clipboard.setContents(selection, null);
+	}
 }

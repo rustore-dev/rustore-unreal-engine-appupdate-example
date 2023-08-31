@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "JavaMethodSignature.h"
 #include "JavaTypeConverter.h"
+#include "AndroidJavaLog.h"
 
 namespace RuStoreSDK
 {
