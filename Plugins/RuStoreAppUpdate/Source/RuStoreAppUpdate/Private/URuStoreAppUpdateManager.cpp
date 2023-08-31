@@ -48,6 +48,7 @@ bool URuStoreAppUpdateManager::Init()
 
     auto clientJavaClass = MakeShared<AndroidJavaClass>("ru/rustore/unitysdk/appupdate/RuStoreUnityAppUpdateManager");
     _clientWrapper = clientJavaClass->GetStaticAJObject("INSTANCE");
+    _clientWrapper->CallVoid("setMetricType", FString("unreal"));
     _clientWrapper->CallVoid("init");
 
     bIsInitialized = true;

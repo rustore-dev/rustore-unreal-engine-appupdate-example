@@ -23,7 +23,7 @@ FURuStoreAppUpdateInfo* AppUpdateInfoResponseListenerImpl::ConvertResponse(Andro
 
     response->updateAvailability = (EURuStoreUpdateAvailability)responseObject->GetInt("updateAvailability");
     response->installStatus = (EURuStoreInstallStatus)responseObject->GetInt("installStatus");
-    response->availableVersionCode = responseObject->GetInt("availableVersionCode");
+    response->availableVersionCode = responseObject->GetLong("availableVersionCode");
 
     return response;
 }

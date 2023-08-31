@@ -11,6 +11,11 @@ AndroidJavaClass::AndroidJavaClass(FString className)
 
     _className = className;
     _classSignature = FString::Printf(TEXT("L%s;"), *_className);
+
+
+#ifdef RuStoreDebug
+    _LogInfo(RuStoreDebug, _classSignature);
+#endif
 #endif
 }
 

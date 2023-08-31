@@ -19,7 +19,7 @@ namespace RuStoreSDK
 		AndroidJavaObject* javaWrapper = nullptr;
 
 	public:
-		RuStoreListener(FString className, FString interfaceName, bool bAsGlobalRef = false);
+		RuStoreListener(FString className, FString interfaceName, bool bAsGlobalRef = true);
 		virtual ~RuStoreListener();
 
 		long GetId();
