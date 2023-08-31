@@ -75,3 +75,4 @@ DerivedDataCache/*
 
 # Debug libraries
 Plugins/RuStoreAccessQA/
+Plugins/RuStoreBuildForAVD/
