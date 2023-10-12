@@ -32,6 +32,7 @@ namespace RuStoreSDK
         static jfloat SetValue(JNIEnv* env, float data) { return static_cast<jfloat>(data); }
         static jdouble SetValue(JNIEnv* env, double data) { return static_cast<jdouble>(data); }
         static jstring SetValue(JNIEnv* env, FString& str) { return env->NewStringUTF(TCHAR_TO_UTF8(*str)); }
+        static jbyteArray SetValue(JNIEnv* env, TArray<uint8>& data);
         static jobjectArray SetValue(JNIEnv* env, TArray<FString>& data);
         static FString Convert(JNIEnv* env, jstring data);
 #endif
