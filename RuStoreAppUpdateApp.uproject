@@ -12,7 +12,7 @@
 	],
 	"Plugins": [
 		{
-			"Name": "RuStoreAccessQA",
+			"Name": "RuStoreBuildForAVD",
 			"Enabled": false
 		}
 	]

@@ -8,11 +8,11 @@
 
 using namespace RuStoreSDK;
 
-const FString URuStoreAppUpdateManager::PluginVersion = "0.1";
+const FString URuStoreAppUpdateManager::PluginVersion = "0.2";
 URuStoreAppUpdateManager* URuStoreAppUpdateManager::_instance = nullptr;
 bool URuStoreAppUpdateManager::_bIsInstanceInitialized = false;
 
-bool URuStoreAppUpdateManager::getIsInitialized()
+bool URuStoreAppUpdateManager::GetIsInitialized()
 {
     return bIsInitialized;
 }
@@ -48,6 +48,7 @@ bool URuStoreAppUpdateManager::Init()
 
     auto clientJavaClass = MakeShared<AndroidJavaClass>("ru/rustore/unitysdk/appupdate/RuStoreUnityAppUpdateManager");
     _clientWrapper = clientJavaClass->GetStaticAJObject("INSTANCE");
+    _clientWrapper->CallVoid("setMetricType", FString("unreal"));
     _clientWrapper->CallVoid("init");
 
     bIsInitialized = true;

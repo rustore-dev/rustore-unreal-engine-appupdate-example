@@ -45,7 +45,7 @@ public:
     static const FString PluginVersion;
 
     UFUNCTION(BlueprintCallable, Category = "RuStore AppUpdate Manager")
-    bool getIsInitialized();
+    bool GetIsInitialized();
 
     UFUNCTION(BlueprintCallable, Category = "RuStore AppUpdate Manager")
     static URuStoreAppUpdateManager* Instance();
