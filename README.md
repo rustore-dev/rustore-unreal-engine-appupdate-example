@@ -10,4 +10,4 @@
 
 3. В настройках проекта (Edit → Project Settings → Android) установить параметр Minimum SDK Version на уровень не ниже 24 и параметр Target SDK Version - не ниже 31.
 
-Минификация приложения (ProGuard/R8) в данный момент не поддерживается. Все необходимые настройки gradle и зависимости проекта прописаны в файлах "RuStoreCore_UPL_Android.xml" и "RuStoreBilling_UPL_Android.xml".
+Минификация приложения (ProGuard/R8) в данный момент не поддерживается. Все необходимые настройки gradle и зависимости проекта прописаны в файлах "RuStoreCore_UPL_Android.xml" и "RuStoreAppUpdate_UPL_Android.xml".
