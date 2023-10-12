@@ -12,7 +12,7 @@ namespace RuStoreSDK
         AppUpdateErrorListenerImpl(
             TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure,
             TFunction<void(RuStoreListener*)> onFinish
-        ) : ErrorListener("com/Plugins/RuStoreAppUpdate/AppUpdateErrorListenerWrapper", "ru/rustore/unitysdk/core/callbacks/ErrorListener", onFailure, onFinish)
+        ) : ErrorListener("ru/rustore/unitysdk/appupdate/wrappers/AppUpdateErrorListenerWrapper", "ru/rustore/unitysdk/core/callbacks/ErrorListener", onFailure, onFinish)
         {
         }
 

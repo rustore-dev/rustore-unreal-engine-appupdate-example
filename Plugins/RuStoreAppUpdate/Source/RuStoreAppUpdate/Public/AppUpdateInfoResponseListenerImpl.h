@@ -14,7 +14,7 @@ namespace RuStoreSDK
             TFunction<void(long, TSharedPtr<FURuStoreAppUpdateInfo, ESPMode::ThreadSafe>)> onSuccess,
             TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure,
             TFunction<void(RuStoreListener*)> onFinish
-        ) : ResponseListener<FURuStoreAppUpdateInfo>("com/Plugins/RuStoreAppUpdate/AppUpdateInfoResponseListenerWrapper", "ru/rustore/unitysdk/appupdate/callbacks/AppUpdateInfoResponseListener", onSuccess, onFailure, onFinish)
+        ) : ResponseListener<FURuStoreAppUpdateInfo>("ru/rustore/unitysdk/appupdate/wrappers/AppUpdateInfoResponseListenerWrapper", "ru/rustore/unitysdk/appupdate/callbacks/AppUpdateInfoResponseListener", onSuccess, onFailure, onFinish)
         {
         }
 

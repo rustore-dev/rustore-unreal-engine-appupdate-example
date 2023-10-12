@@ -36,7 +36,7 @@ void InstallStateUpdateListenerImpl::OnStateUpdated(AndroidJavaObject* stateObje
 #if PLATFORM_ANDROID
 extern "C"
 {
-    JNIEXPORT void JNICALL Java_com_Plugins_RuStoreAppUpdate_InstallStateUpdateListenerWrapper_NativeOnStateUpdated(JNIEnv*, jobject, jlong pointer, jobject result)
+    JNIEXPORT void JNICALL Java_ru_rustore_unitysdk_appupdate_wrappers_InstallStateUpdateListenerWrapper_NativeOnStateUpdated(JNIEnv*, jobject, jlong pointer, jobject result)
     {
         auto obj = new AndroidJavaObject(result);
         obj->UpdateToGlobalRef();

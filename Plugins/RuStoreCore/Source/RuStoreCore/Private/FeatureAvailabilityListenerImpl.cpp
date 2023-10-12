@@ -52,7 +52,7 @@ FURuStoreFeatureAvailabilityResult* FeatureAvailabilityListenerImpl::ConvertResp
 #if PLATFORM_ANDROID
 extern "C"
 {
-    JNIEXPORT void JNICALL Java_com_Plugins_RuStoreCore_FeatureAvailabilityListenerWrapper_NativeOnFailure(JNIEnv* env, jobject, jlong pointer, jthrowable throwable)
+    JNIEXPORT void JNICALL Java_ru_rustore_unitysdk_core_wrappers_FeatureAvailabilityListenerWrapper_NativeOnFailure(JNIEnv* env, jobject, jlong pointer, jthrowable throwable)
     {
         auto obj = new AndroidJavaObject(throwable);
         obj->UpdateToGlobalRef();
@@ -61,7 +61,7 @@ extern "C"
         castobj->OnFailure(obj);
     }
 
-    JNIEXPORT void JNICALL Java_com_Plugins_RuStoreCore_FeatureAvailabilityListenerWrapper_NativeOnSuccess(JNIEnv* env, jobject, jlong pointer, jobject result)
+    JNIEXPORT void JNICALL Java_ru_rustore_unitysdk_core_wrappers_FeatureAvailabilityListenerWrapper_NativeOnSuccess(JNIEnv* env, jobject, jlong pointer, jobject result)
     {
         auto obj = new AndroidJavaObject(result);
         obj->UpdateToGlobalRef();
