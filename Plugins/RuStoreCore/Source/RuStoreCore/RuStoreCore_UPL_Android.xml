@@ -1,26 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <Platforms>
-    <Android>
-      <bEnableBuildCache>true</bEnableBuildCache>
-    </Android>
-  </Platforms>
-  
   <prebuildCopies>
     <copyDir src="$S(PluginDir)/Private/Java" dst="$S(BuildDir)/src/com/Plugins/RuStoreCore" />
   </prebuildCopies>
 
   <resourceCopies>
-    <copyDir src="$S(PluginDir)/ThirdParty/Android" dst="$S(BuildDir)/libs" />
+    <copyDir src="$S(PluginDir)/ThirdParty/Android/libs" dst="$S(BuildDir)/libs" />
   </resourceCopies>
   
   <gradleProperties>
     <insert>
-      android.enableBuildCache=false
       android.useAndroidX=true
       android.enableJetifier=true
-      android.enableR8=false
     </insert>
   </gradleProperties>
   
@@ -41,7 +33,6 @@
           buildTypes {
             all {
               minifyEnabled false
-              useProguard false    
             }
           }
         }
@@ -53,6 +44,9 @@
         maven {
           url 'https://artifactory-external.vkpartner.ru/artifactory/maven'
         }
+        maven {
+          url uri("src/main/libs")
+        }
       }
         
       if (project.hasProperty('rustore_sdk_type')) {
@@ -61,7 +55,7 @@
       
       dependencies {
         // RuStore Core
-        implementation("ru.rustore.sdk:core:0.1.8$core_type")
+        implementation("ru.rustore.sdk:core:1.0.0$core_type")
         implementation fileTree(include: ["RuStoreUnityCore${core_type}.aar"], dir: 'src/main/libs')
         
         implementation("androidx.annotation:annotation:1.0.0")
