@@ -8,7 +8,7 @@
 
 using namespace RuStoreSDK;
 
-const FString URuStoreAppUpdateManager::PluginVersion = "0.1";
+const FString URuStoreAppUpdateManager::PluginVersion = "0.4";
 URuStoreAppUpdateManager* URuStoreAppUpdateManager::_instance = nullptr;
 bool URuStoreAppUpdateManager::_bIsInstanceInitialized = false;
 
