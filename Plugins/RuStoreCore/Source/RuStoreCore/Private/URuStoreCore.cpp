@@ -2,12 +2,14 @@
 
 #include "URuStoreCore.h"
 #include "AndroidJavaClass.h"
+#include "JavaActivity.h"
+#include "JavaApplication.h"
 
-const FString URuStoreCore::PluginVersion = "0.1";
+const FString URuStoreCore::PluginVersion = "0.4";
 URuStoreCore* URuStoreCore::_instance = nullptr;
 bool URuStoreCore::_bIsInstanceInitialized = false;
 
-bool URuStoreCore::getbIsInitialized() { return bIsInitialized; }
+bool URuStoreCore::GetIsInitialized() { return bIsInitialized; }
 
 URuStoreCore* URuStoreCore::Instance()
 {
@@ -52,8 +54,6 @@ void URuStoreCore::ConditionalBeginDestroy()
 {
     Super::ConditionalBeginDestroy();
 
-    LogInfo("rustore", "RuStore Core begin destroy");
-
     Dispose();
     if (_bIsInstanceInitialized) _bIsInstanceInitialized = false;
 }
@@ -89,40 +89,54 @@ void URuStoreCore::ShowToast(FString message)
 
 void URuStoreCore::LogVerbose(FString tag, FString message)
 {
-#if PLATFORM_ANDROID
-    __android_log_write(ANDROID_LOG_VERBOSE, TCHAR_TO_UTF8(*tag), TCHAR_TO_UTF8(*message));
-#endif
+    _LogVerbose(tag, message);
 }
 
 void URuStoreCore::LogDebug(FString tag, FString message)
 {
-#if PLATFORM_ANDROID
-    __android_log_write(ANDROID_LOG_DEBUG, TCHAR_TO_UTF8(*tag), TCHAR_TO_UTF8(*message));
-#endif
+    _LogDebug(tag, message);
 }
 
 void URuStoreCore::LogInfo(FString tag, FString message)
 {
-#if PLATFORM_ANDROID
-	__android_log_write(ANDROID_LOG_INFO, TCHAR_TO_UTF8(*tag), TCHAR_TO_UTF8(*message));
-#endif
+    _LogInfo(tag, message);
 }
 
 void URuStoreCore::LogWarn(FString tag, FString message)
 {
-#if PLATFORM_ANDROID
-    __android_log_write(ANDROID_LOG_WARN, TCHAR_TO_UTF8(*tag), TCHAR_TO_UTF8(*message));
-#endif
+    _LogWarn(tag, message);
 }
 
 void URuStoreCore::LogError(FString tag, FString message)
 {
-#if PLATFORM_ANDROID
-    __android_log_write(ANDROID_LOG_ERROR, TCHAR_TO_UTF8(*tag), TCHAR_TO_UTF8(*message));
-#endif
+    _LogError(tag, message);
 }
 
 bool URuStoreCore::CompareId(int64 A, int64 B)
 {
     return (A == B && A != 0);
+}
+
+void URuStoreCore::CopyToClipboard(FString text)
+{
+    auto javaClass = MakeShared<AndroidJavaClass>("com/Plugins/RuStoreCore/RuStoreCoreUtils");
+    auto activity = MakeShared<JavaActivity>();
+
+    javaClass->CallStaticVoid("CopyToClipboard", &activity.Get(), text);
+}
+
+void URuStoreCore::GetFromClipboard(FString& text)
+{
+    auto javaClass = MakeShared<AndroidJavaClass>("com/Plugins/RuStoreCore/RuStoreCoreUtils");
+    auto activity = MakeShared<JavaActivity>();
+
+    text = javaClass->CallStaticFString("GetFromClipboard", &activity.Get());
+}
+
+void URuStoreCore::GetStringResources(FString name, FString& value)
+{
+    auto javaClass = MakeShared<AndroidJavaClass>("com/Plugins/RuStoreCore/RuStoreCoreUtils");
+    auto application = MakeShared<JavaApplication>();
+
+    value = javaClass->CallStaticFString("GetStringResources", &application.Get(), name);
 }

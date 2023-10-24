@@ -14,10 +14,6 @@
 		{
 			"Name": "RuStoreAccessQA",
 			"Enabled": false
-		},
-		{
-			"Name": "RuStoreAccessQA",
-			"Enabled": false
 		}
 	]
 }
