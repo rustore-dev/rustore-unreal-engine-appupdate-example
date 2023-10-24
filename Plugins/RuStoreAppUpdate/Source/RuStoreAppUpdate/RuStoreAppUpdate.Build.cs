@@ -9,8 +9,24 @@ public class RuStoreAppUpdate : ModuleRules
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicIncludePaths.AddRange(new string[] { Path.Combine(ModuleDirectory, "Public") });
-		PrivateIncludePaths.AddRange(new string[] { Path.Combine(ModuleDirectory, "Private") });
+		string publicPath = Path.Combine(ModuleDirectory, "Public");
+		string privatePath = Path.Combine(ModuleDirectory, "Private");
+
+		PublicIncludePaths.AddRange(
+			new string[]
+			{
+				publicPath,
+				Path.Combine(publicPath, "AsyncNodes"),
+			}
+		);
+
+		PrivateIncludePaths.AddRange(
+			new string[]
+			{
+				privatePath,
+				Path.Combine(privatePath, "AsyncNodes"),
+			}
+		);
 
 		PublicDependencyModuleNames.AddRange(
 			new string[]
