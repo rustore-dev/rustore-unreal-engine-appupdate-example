@@ -11,8 +11,17 @@ namespace RuStoreSDK
     {
     public:
         template <typename T>
-        static FString getName(T);
-        static FString getName(IAndroidClasses* obj);
+        static FString getName(T)
+        {
+            return TEXT("");
+        }
+
+        template <typename T>
+        static FString getName(T* obj)
+        {
+            return FString::Printf(TEXT("L%s;"), *(((IAndroidClasses*)obj)->GetName()));
+        }
+
         static FString getName(void);
         static FString getName(bool);
         static FString getName(unsigned char);
@@ -26,24 +35,6 @@ namespace RuStoreSDK
         static FString getName(TArray<FString>&);
         static FString getName(TArray<uint8>&);
         static FString getName(TArray<uint8>*);
-
-        template <typename T>
-        static FString getNames(T* obj) {
-            return getName((IAndroidClasses*)obj);
-        }
-
-        template <typename T>
-        static FString getNames(T obj) {
-            return getName(obj);
-        }
-
-        static FString getNames(FString obj) {
-            return getName(obj);
-        }
-
-        static FString getNames(TArray<uint8>* obj) {
-            return getName(obj);
-        }
 
         template <typename... Args>
         static FString Constuct(Args... args)
@@ -60,61 +51,61 @@ namespace RuStoreSDK
         template <typename... Args>
         static FString MakeVoid(Args... args)
         {
-            return Constuct(getNames(args)...) + "V";
+            return Constuct(getName(args)...) + "V";
         }
 
         template <typename... Args>
         static FString MakeBool(Args... args)
         {
-            return Constuct(getNames(args)...) + "Z";
+            return Constuct(getName(args)...) + "Z";
         }
 
         template <typename... Args>
         static FString MakeByte(Args... args)
         {
-            return Constuct(getNames(args)...) + "B";
+            return Constuct(getName(args)...) + "B";
         }
 
         template <typename... Args>
         static FString MakeInt(Args... args)
         {
-            return Constuct(getNames(args)...) + "I";
+            return Constuct(getName(args)...) + "I";
         }
 
         template <typename... Args>
         static FString MakeLong(Args... args)
         {
-            return Constuct(getNames(args)...) + "J";
+            return Constuct(getName(args)...) + "J";
         }
 
         template <typename... Args>
         static FString MakeFString(Args... args)
         {
-            return Constuct(getNames(args)...) + "Ljava/lang/String;";
+            return Constuct(getName(args)...) + "Ljava/lang/String;";
         }
 
         template <typename... Args>
         static FString MakeAJClass(Args... args)
         {
-            return Constuct(getNames(args)...) + "Ljava/lang/Class;";
+            return Constuct(getName(args)...) + "Ljava/lang/Class;";
         }
 
         template <typename... Args>
         static FString MakeAJObject(Args... args)
         {
-            return Constuct(getNames(args)...) + "Ljava/lang/Object;";
+            return Constuct(getName(args)...) + "Ljava/lang/Object;";
         }
 
         template <typename... Args>
         static FString MakeSpecificAJObject(FString signature, Args... args)
         {
-            return Constuct(getNames(args)...) + signature;
+            return Constuct(getName(args)...) + signature;
         }
 
         template <typename... Args>
         static FString MakeByteArray(Args... args)
         {
-            return Constuct(getNames(args)...) + "[B";
+            return Constuct(getName(args)...) + "[B";
         }
     };
 }

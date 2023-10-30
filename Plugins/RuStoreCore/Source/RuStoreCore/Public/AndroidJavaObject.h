@@ -72,11 +72,12 @@ namespace RuStoreSDK
 		{
 #if PLATFORM_ANDROID
 			FString methodSignature = JavaMethodSignature::MakeVoid(args...);
-			jmethodID javaMethodID = FJavaWrapper::FindMethod(env, javaClass, TCHAR_TO_ANSI(*methodName), TCHAR_TO_ANSI(*methodSignature), false);
 
 #ifdef RuStoreDebug
 			_LogInfo(RuStoreDebug, methodSignature);
 #endif
+
+			jmethodID javaMethodID = FJavaWrapper::FindMethod(env, javaClass, TCHAR_TO_ANSI(*methodName), TCHAR_TO_ANSI(*methodSignature), false);
 
 			FJavaWrapper::CallVoidMethod(env, javaObject, javaMethodID, JavaTypeConverter::SetValue(env, args)...);
 #endif

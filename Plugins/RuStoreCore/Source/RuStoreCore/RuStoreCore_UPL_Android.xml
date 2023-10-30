@@ -55,7 +55,7 @@
       
       dependencies {
         // RuStore Core
-        implementation("ru.rustore.sdk:core:1.0.0$core_type")
+        //implementation("ru.rustore.sdk:core:1.0.0$core_type")
         implementation fileTree(include: ["RuStoreUnityCore${core_type}.aar"], dir: 'src/main/libs')
         
         implementation("androidx.annotation:annotation:1.0.0")
