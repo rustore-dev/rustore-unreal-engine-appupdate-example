@@ -122,7 +122,7 @@ namespace RuStoreSDK
 		}
 
 		template<typename... Args>
-		int CallLong(FString methodName, Args... args)
+		long CallLong(FString methodName, Args... args)
 		{
 			long result = 0;
 
@@ -135,6 +135,25 @@ namespace RuStoreSDK
 #endif
 
 			result = (long)env->CallLongMethod(javaObject, javaMethodID, JavaTypeConverter::SetValue(env, args)...);
+#endif
+
+			return result;
+		}
+
+		template<typename... Args>
+		bool CallBool(FString methodName, Args... args)
+		{
+			bool result = false;
+
+#if PLATFORM_ANDROID
+			FString methodSignature = JavaMethodSignature::MakeBool(args...);
+			jmethodID javaMethodID = FJavaWrapper::FindMethod(env, javaClass, TCHAR_TO_ANSI(*methodName), TCHAR_TO_ANSI(*methodSignature), false);
+
+#ifdef RuStoreDebug
+			_LogInfo(RuStoreDebug, methodSignature);
+#endif
+
+			result = (bool)env->CallBooleanMethod(javaObject, javaMethodID, JavaTypeConverter::SetValue(env, args)...);
 #endif
 
 			return result;
