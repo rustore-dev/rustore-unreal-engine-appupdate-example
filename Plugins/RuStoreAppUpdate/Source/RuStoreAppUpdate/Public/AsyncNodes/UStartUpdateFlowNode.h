@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Kismet/BlueprintAsyncActionBase.h"
+#include "EURuStoreAppUpdateOptions.h"
 #include "URuStoreAppUpdateManager.h"
 #include "UStartUpdateFlowNode.generated.h"
 
@@ -24,5 +25,5 @@ public:
     FStartUpdateFlowPin Failure;
 
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", WorldContext = "WorldContextObject"), Category = "RuStore AppUpdate Manager")
-    static UStartUpdateFlowNode* StartUpdateFlowAsync(URuStoreAppUpdateManager* target);
+    static UStartUpdateFlowNode* StartUpdateFlowAsync(URuStoreAppUpdateManager* target, EURuStoreAppUpdateOptions appUpdateOptions);
 };
