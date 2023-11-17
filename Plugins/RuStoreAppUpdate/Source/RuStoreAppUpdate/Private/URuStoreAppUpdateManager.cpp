@@ -89,6 +89,14 @@ long URuStoreAppUpdateManager::GetAppUpdateInfo(TFunction<void(long, TSharedPtr<
     return listener->GetId();
 }
 
+bool URuStoreAppUpdateManager::CheckIsImmediateUpdateAllowed()
+{
+    if (!URuStoreCore::IsPlatformSupported()) return false;
+    if (!bIsInitialized) return false;
+
+    return _clientWrapper->CallBool("isImmediateUpdateAllowed");
+}
+
 int64 URuStoreAppUpdateManager::RegisterListener(TScriptInterface<IRuStoreInstallStateUpdateListenerInterface> stateListener)
 {
     if (!URuStoreCore::IsPlatformSupported()) return 0;
@@ -130,7 +138,7 @@ bool URuStoreAppUpdateManager::UnregisterListener(TScriptInterface<IRuStoreInsta
     return false;
 }
 
-long URuStoreAppUpdateManager::StartUpdateFlow(TFunction<void(long, EURuStoreUpdateFlowResult)> onSuccess, TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure)
+long URuStoreAppUpdateManager::StartUpdateFlow(EURuStoreAppUpdateOptions appUpdateOptions, TFunction<void(long, EURuStoreUpdateFlowResult)> onSuccess, TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure)
 {
     if (!URuStoreCore::IsPlatformSupported(onFailure)) return 0;
     if (!bIsInitialized) return 0;
@@ -138,7 +146,21 @@ long URuStoreAppUpdateManager::StartUpdateFlow(TFunction<void(long, EURuStoreUpd
     auto _onSuccess = [onSuccess](long requestId, int result) { onSuccess(requestId, (EURuStoreUpdateFlowResult)(result)); };
 
     auto listener = ListenerBind(new UpdateFlowResultListenerImpl(_onSuccess, onFailure, [this](RuStoreListener* item) { ListenerUnbind(item); }));
-    _clientWrapper->CallVoid("startUpdateFlow", listener->GetJWrapper());
+
+    switch (appUpdateOptions)
+    {
+    case EURuStoreAppUpdateOptions::DELAYED:
+        _clientWrapper->CallVoid("startUpdateFlowDelayed", listener->GetJWrapper());
+        break;
+    case EURuStoreAppUpdateOptions::SILENT:
+        _clientWrapper->CallVoid("startUpdateFlowSilent", listener->GetJWrapper());
+        break;
+    case EURuStoreAppUpdateOptions::IMMEDIATE:
+        _clientWrapper->CallVoid("startUpdateFlowImmediate", listener->GetJWrapper());
+        break;
+    default:
+        _clientWrapper->CallVoid("startUpdateFlowDelayed", listener->GetJWrapper());
+    }
 
     return listener->GetId();
 }
@@ -166,9 +188,10 @@ void URuStoreAppUpdateManager::GetAppUpdateInfo(int64& requestId)
     );
 }
 
-void URuStoreAppUpdateManager::StartUpdateFlow(int64& requestId)
+void URuStoreAppUpdateManager::StartUpdateFlow(int64& requestId, EURuStoreAppUpdateOptions appUpdateOptions)
 {
     requestId = StartUpdateFlow(
+        appUpdateOptions,
         [this](long requestId, EURuStoreUpdateFlowResult response) {
             OnStartUpdateFlowResponse.Broadcast(requestId, response);
         },

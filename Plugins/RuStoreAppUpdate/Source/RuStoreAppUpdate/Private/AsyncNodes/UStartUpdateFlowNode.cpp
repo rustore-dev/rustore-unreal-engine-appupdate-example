@@ -10,11 +10,12 @@ UStartUpdateFlowNode::UStartUpdateFlowNode(const FObjectInitializer& ObjectIniti
 {
 }
 
-UStartUpdateFlowNode* UStartUpdateFlowNode::StartUpdateFlowAsync(URuStoreAppUpdateManager* target)
+UStartUpdateFlowNode* UStartUpdateFlowNode::StartUpdateFlowAsync(URuStoreAppUpdateManager* target, EURuStoreAppUpdateOptions appUpdateOptions)
 {
     auto node = NewObject<UStartUpdateFlowNode>(GetTransientPackage());
     
     target->StartUpdateFlow(
+        appUpdateOptions,
         [node](long requestId, EURuStoreUpdateFlowResult response) {
             node->Success.Broadcast(response, FURuStoreError());
         },
