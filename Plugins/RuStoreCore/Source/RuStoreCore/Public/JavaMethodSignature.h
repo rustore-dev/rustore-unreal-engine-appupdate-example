@@ -79,6 +79,18 @@ namespace RuStoreSDK
         }
 
         template <typename... Args>
+        static FString MakeFloat(Args... args)
+        {
+            return Constuct(getName(args)...) + "F";
+        }
+
+        template <typename... Args>
+        static FString MakeDouble(Args... args)
+        {
+            return Constuct(getName(args)...) + "D";
+        }
+
+        template <typename... Args>
         static FString MakeFString(Args... args)
         {
             return Constuct(getName(args)...) + "Ljava/lang/String;";

@@ -7,12 +7,12 @@ import android.app.Application;
 import android.content.ClipboardManager;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.Keep;
 import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import java.io.IOException;
@@ -72,6 +72,14 @@ public class RuStoreCoreUtils
 	}
 
 	@Keep
+	public static int GetIntResources(final Application application, String name)
+	{
+		int id = application.getResources().getIdentifier(name, "integer", application.getPackageName());
+		
+		return application.getResources().getInteger(id);
+	}
+
+	@Keep
 	public static RuStoreImage DownloadImage(String imageUrl) throws IOException
 	{
 		RuStoreImage image = new RuStoreImage();
@@ -104,4 +112,41 @@ public class RuStoreCoreUtils
 
         return image;
     }
+
+	@Keep
+	public static String GetStringSharedPreferences(final Application application, String storageName, String key, String defaultValue)
+	{
+		SharedPreferences preferences = application.getSharedPreferences(storageName, Context.MODE_PRIVATE);
+		return preferences.getString(key, defaultValue);
+	}
+
+	@Keep
+	public static int GetIntSharedPreferences(final Application application, String storageName, String key, int defaultValue)
+	{
+		SharedPreferences preferences = application.getSharedPreferences(storageName, Context.MODE_PRIVATE);
+		return preferences.getInt(key, defaultValue);
+	}
+
+	@Keep
+	public static void SetStringSharedPreferences(final Application application, String storageName, String key, String value)
+	{
+		SharedPreferences preferences = application.getSharedPreferences(storageName, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putString(key, value);
+		editor.apply();
+	}
+
+	@Keep
+	public static void SetIntSharedPreferences(final Application application, String storageName, String key, int value)
+	{
+		SharedPreferences preferences = application.getSharedPreferences(storageName, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putInt(key, value);
+		editor.apply();
+	}
+
+	@Keep
+	public static void RestartAndroidApp(final Application application)
+	{
+	}
 }
