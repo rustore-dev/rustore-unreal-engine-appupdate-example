@@ -19,7 +19,14 @@ void InstallStateUpdateListenerImpl::OnStateUpdated(AndroidJavaObject* stateObje
         ? (double)state->bytesDownloaded / (double)state->totalBytesToDownload
         : 0;
 
-    state->installErrorCode = (EURuStoreInstallErrorCode)(stateObject->GetInt("installErrorCode") - 4001);
+    
+    int installErrorCode = stateObject->GetInt("installErrorCode");
+    if (installErrorCode < 9901)
+        installErrorCode -= 4001;
+    else
+        installErrorCode -= 9901 + 12;
+
+    state->installErrorCode = (EURuStoreInstallErrorCode)installErrorCode;
     state->installStatus = (EURuStoreInstallStatus)stateObject->GetInt("installStatus");
 
     delete stateObject;
