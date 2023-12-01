@@ -17,7 +17,7 @@ namespace RuStoreSDK
     public:
         InstallStateUpdateListenerImpl(
             TFunction<void(long, TSharedPtr<FURuStoreInstallState, ESPMode::ThreadSafe>)> onStateUpdated
-        ) : RuStoreListener("com/Plugins/RuStoreAppUpdate/InstallStateUpdateListenerWrapper", "ru/rustore/sdk/appupdate/listener/InstallStateUpdateListener")
+        ) : RuStoreListener("ru/rustore/unitysdk/appupdate/wrappers/InstallStateUpdateListenerWrapper", "ru/rustore/sdk/appupdate/listener/InstallStateUpdateListener")
         {
             _onStateUpdated = onStateUpdated;
         }

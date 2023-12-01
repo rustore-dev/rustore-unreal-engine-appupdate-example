@@ -31,7 +31,7 @@ FURuStoreAppUpdateInfo* AppUpdateInfoResponseListenerImpl::ConvertResponse(Andro
 #if PLATFORM_ANDROID
 extern "C"
 {
-    JNIEXPORT void JNICALL Java_com_Plugins_RuStoreAppUpdate_AppUpdateInfoResponseListenerWrapper_NativeOnFailure(JNIEnv*, jobject, jlong pointer, jthrowable throwable)
+    JNIEXPORT void JNICALL Java_ru_rustore_unitysdk_appupdate_wrappers_AppUpdateInfoResponseListenerWrapper_NativeOnFailure(JNIEnv*, jobject, jlong pointer, jthrowable throwable)
     {
         auto obj = new AndroidJavaObject(throwable);
         obj->UpdateToGlobalRef();
@@ -40,7 +40,7 @@ extern "C"
         castobj->OnFailure(obj);
     }
 
-    JNIEXPORT void JNICALL Java_com_Plugins_RuStoreAppUpdate_AppUpdateInfoResponseListenerWrapper_NativeOnSuccess(JNIEnv*, jobject, jlong pointer, jobject result)
+    JNIEXPORT void JNICALL Java_ru_rustore_unitysdk_appupdate_wrappers_AppUpdateInfoResponseListenerWrapper_NativeOnSuccess(JNIEnv*, jobject, jlong pointer, jobject result)
     {
         auto obj = new AndroidJavaObject(result);
         obj->UpdateToGlobalRef();

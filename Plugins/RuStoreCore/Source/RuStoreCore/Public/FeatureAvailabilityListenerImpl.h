@@ -19,7 +19,7 @@ namespace RuStoreSDK
 			TFunction<void(long requestId, TSharedPtr<FURuStoreFeatureAvailabilityResult, ESPMode::ThreadSafe>)> onSuccess,
 			TFunction<void(long requestId, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure,
 			TFunction<void(RuStoreListener*)> onFinish
-		) : ResponseListener<FURuStoreFeatureAvailabilityResult>("com/Plugins/RuStoreCore/FeatureAvailabilityListenerWrapper", "ru/rustore/unitysdk/core/callbacks/FeatureAvailabilityListener", onSuccess, onFailure, onFinish)
+		) : ResponseListener<FURuStoreFeatureAvailabilityResult>("ru/rustore/unitysdk/core/wrappers/FeatureAvailabilityListenerWrapper", "ru/rustore/unitysdk/core/callbacks/FeatureAvailabilityListener", onSuccess, onFailure, onFinish)
 		{
 		}
 

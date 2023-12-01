@@ -11,10 +11,8 @@
   
   <gradleProperties>
     <insert>
-      android.enableBuildCache=false
       android.useAndroidX=true
       android.enableJetifier=true
-      android.enableR8=false
     </insert>
   </gradleProperties>
   
@@ -35,7 +33,6 @@
           buildTypes {
             all {
               minifyEnabled false
-              useProguard false
             }
           }
         }
@@ -47,6 +44,9 @@
         maven {
           url 'https://artifactory-external.vkpartner.ru/artifactory/maven'
         }
+        maven {
+          url uri("src/main/libs")
+        }
       }
         
       if (project.hasProperty('rustore_sdk_type')) {
@@ -54,10 +54,7 @@
       }
       
       dependencies {
-        // RuStore Core
-        implementation("ru.rustore.sdk:core:0.1.10$core_type")
         implementation fileTree(include: ["RuStoreUnityCore${core_type}.aar"], dir: 'src/main/libs')
-      
         implementation("androidx.annotation:annotation:1.0.0")
         implementation("androidx.lifecycle:lifecycle-runtime:2.4.1")
         implementation("com.google.android.material:material:1.6.0")

@@ -19,7 +19,14 @@ void InstallStateUpdateListenerImpl::OnStateUpdated(AndroidJavaObject* stateObje
         ? (double)state->bytesDownloaded / (double)state->totalBytesToDownload
         : 0;
 
-    state->installErrorCode = (EURuStoreInstallErrorCode)(stateObject->GetInt("installErrorCode") - 4001);
+    
+    int installErrorCode = stateObject->GetInt("installErrorCode");
+    if (installErrorCode < 9901)
+        installErrorCode -= 4001;
+    else
+        installErrorCode -= 9901 + 12;
+
+    state->installErrorCode = (EURuStoreInstallErrorCode)installErrorCode;
     state->installStatus = (EURuStoreInstallStatus)stateObject->GetInt("installStatus");
 
     delete stateObject;
@@ -36,7 +43,7 @@ void InstallStateUpdateListenerImpl::OnStateUpdated(AndroidJavaObject* stateObje
 #if PLATFORM_ANDROID
 extern "C"
 {
-    JNIEXPORT void JNICALL Java_com_Plugins_RuStoreAppUpdate_InstallStateUpdateListenerWrapper_NativeOnStateUpdated(JNIEnv*, jobject, jlong pointer, jobject result)
+    JNIEXPORT void JNICALL Java_ru_rustore_unitysdk_appupdate_wrappers_InstallStateUpdateListenerWrapper_NativeOnStateUpdated(JNIEnv*, jobject, jlong pointer, jobject result)
     {
         auto obj = new AndroidJavaObject(result);
         obj->UpdateToGlobalRef();
