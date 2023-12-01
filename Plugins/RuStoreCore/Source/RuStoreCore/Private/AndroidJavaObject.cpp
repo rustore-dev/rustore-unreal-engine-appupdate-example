@@ -172,7 +172,7 @@ int AndroidJavaObject::GetInt(FString fieldName)
     return result;
 }
 
-int AndroidJavaObject::GetLong(FString fieldName)
+long AndroidJavaObject::GetLong(FString fieldName)
 {
     long result = 0;
 #if PLATFORM_ANDROID
