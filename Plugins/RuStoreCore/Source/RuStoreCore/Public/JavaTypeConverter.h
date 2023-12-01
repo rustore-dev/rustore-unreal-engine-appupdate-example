@@ -3,26 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AndroidJavaObject.h"
-#include "JavaActivity.h"
-#include "JavaApplication.h"
+#include "IAndroidClasses.h"
 
 namespace RuStoreSDK
 {
-    class AndroidJavaObject;
-    class JavaActivity;
-    class JavaApplication;
-
     class RUSTORECORE_API JavaTypeConverter
     {
     public:
 #if PLATFORM_ANDROID
         template<typename T>
         static T SetValue(JNIEnv* env, T& data) { return data; }
-        static jobject SetValue(JNIEnv* env, IAndroidClasses* data) { return data->GetJObject(); }
-        static jobject SetValue(JNIEnv* env, AndroidJavaObject* data) { return ((IAndroidClasses*)data)->GetJObject(); }
-        static jobject SetValue(JNIEnv* env, JavaActivity* data) { return ((IAndroidClasses*)data)->GetJObject(); }
-        static jobject SetValue(JNIEnv* env, JavaApplication* data) { return ((IAndroidClasses*)data)->GetJObject(); }
+
+        template<typename T>
+        static jobject SetValue(JNIEnv* env, T* data) { return ((IAndroidClasses*)data)->GetJObject(); }
         static jboolean SetValue(JNIEnv* env, bool data) { return static_cast<jboolean>(data); }
         static jbyte SetValue(JNIEnv* env, unsigned char data) { return static_cast<jbyte>(data); }
         static jchar SetValue(JNIEnv* env, char data) { return static_cast<jchar>(data); }

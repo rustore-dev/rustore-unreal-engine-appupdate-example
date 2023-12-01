@@ -2,8 +2,10 @@
 
 #include "URuStoreCore.h"
 #include "AndroidJavaClass.h"
+#include "JavaActivity.h"
+#include "JavaApplication.h"
 
-const FString URuStoreCore::PluginVersion = "0.2";
+const FString URuStoreCore::PluginVersion = "1.0";
 URuStoreCore* URuStoreCore::_instance = nullptr;
 bool URuStoreCore::_bIsInstanceInitialized = false;
 
@@ -137,4 +139,49 @@ void URuStoreCore::GetStringResources(FString name, FString& value)
     auto application = MakeShared<JavaApplication>();
 
     value = javaClass->CallStaticFString("GetStringResources", &application.Get(), name);
+}
+
+void URuStoreCore::GetIntResources(FString name, int& value)
+{
+    auto javaClass = MakeShared<AndroidJavaClass>("com/Plugins/RuStoreCore/RuStoreCoreUtils");
+    auto application = MakeShared<JavaApplication>();
+
+    value = javaClass->CallStaticInt("GetIntResources", &application.Get(), name);
+}
+
+FString URuStoreCore::GetStringSharedPreferences(FString storageName, FString key, FString defaultValue)
+{
+    auto javaClass = MakeShared<AndroidJavaClass>("com/Plugins/RuStoreCore/RuStoreCoreUtils");
+    auto application = MakeShared<JavaApplication>();
+
+    return javaClass->CallStaticFString("GetStringSharedPreferences", &application.Get(), storageName, key, defaultValue);
+}
+
+int URuStoreCore::GetIntSharedPreferences(FString storageName, FString key, int defaultValue)
+{
+    auto javaClass = MakeShared<AndroidJavaClass>("com/Plugins/RuStoreCore/RuStoreCoreUtils");
+    auto application = MakeShared<JavaApplication>();
+
+    return javaClass->CallStaticInt("GetIntSharedPreferences", &application.Get(), storageName, key, defaultValue);
+}
+
+void URuStoreCore::SetStringSharedPreferences(FString storageName, FString key, FString value)
+{
+    auto javaClass = MakeShared<AndroidJavaClass>("com/Plugins/RuStoreCore/RuStoreCoreUtils");
+    auto application = MakeShared<JavaApplication>();
+    javaClass->CallStaticVoid("SetStringSharedPreferences", &application.Get(), storageName, key, value);
+}
+
+void URuStoreCore::SetIntSharedPreferences(FString storageName, FString key, int value)
+{
+    auto javaClass = MakeShared<AndroidJavaClass>("com/Plugins/RuStoreCore/RuStoreCoreUtils");
+    auto application = MakeShared<JavaApplication>();
+    javaClass->CallStaticVoid("SetIntSharedPreferences", &application.Get(), storageName, key, value);
+}
+
+void URuStoreCore::RestartAndroidApp() {
+    auto javaClass = MakeShared<AndroidJavaClass>("com/Plugins/RuStoreCore/RuStoreCoreUtils");
+    auto application = MakeShared<JavaApplication>();
+
+    return javaClass->CallStaticVoid("RestartAndroidApp", &application.Get());
 }

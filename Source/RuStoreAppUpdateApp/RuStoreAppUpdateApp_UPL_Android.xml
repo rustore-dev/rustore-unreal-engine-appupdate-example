@@ -6,5 +6,5 @@
       <addAttribute tag="$" name="android:exported" value="true" />
     </loopElements>
   </androidManifestUpdates>
-
+  
 </root>

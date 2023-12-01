@@ -8,6 +8,7 @@
 #include "AndroidJavaClass.h"
 #include "FURuStoreError.h"
 #include "FURuStoreAppUpdateInfo.h"
+#include "EURuStoreAppUpdateOptions.h"
 #include "EURuStoreUpdateFlowResult.h"
 #include "InstallStateUpdateListenerImpl.h"
 #include "RuStoreListener.h"
@@ -62,8 +63,11 @@ public:
     void ConditionalBeginDestroy();
 
     long GetAppUpdateInfo(TFunction<void(long, TSharedPtr<FURuStoreAppUpdateInfo, ESPMode::ThreadSafe>)> onSuccess, TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure);
-    long StartUpdateFlow(TFunction<void(long, EURuStoreUpdateFlowResult)> onSuccess, TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure);
+    long StartUpdateFlow(EURuStoreAppUpdateOptions appUpdateOptions, TFunction<void(long, EURuStoreUpdateFlowResult)> onSuccess, TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure);
     long CompleteUpdate(TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure);
+
+    UFUNCTION(BlueprintCallable, Category = "RuStore AppUpdate Manager")
+    bool CheckIsImmediateUpdateAllowed();
 
     UFUNCTION(BlueprintCallable, Category = "RuStore AppUpdate Manager")
     int64 RegisterListener(TScriptInterface<IRuStoreInstallStateUpdateListenerInterface> stateListener);
@@ -84,7 +88,7 @@ public:
 
     // 
     UFUNCTION(BlueprintCallable, Category = "RuStore AppUpdate Manager")
-    void StartUpdateFlow(int64& requestId);
+    void StartUpdateFlow(int64& requestId, EURuStoreAppUpdateOptions appUpdateOptions);
 
     UPROPERTY(BlueprintAssignable, Category = "RuStore AppUpdate Manager")
     FRuStoreStartUpdateFlowErrorDelegate OnStartUpdateFlowError;

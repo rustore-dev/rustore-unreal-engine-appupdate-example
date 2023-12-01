@@ -51,7 +51,7 @@ namespace RuStoreSDK
 		template<typename T>
 		T* Get(FString fieldName);
 		int GetInt(FString fieldName);
-		int GetLong(FString fieldName);
+		long GetLong(FString fieldName);
 		bool GetBool(FString fieldName);
 		FString GetFString(FString fieldName);
 		int GetEnum(FString fieldName, FString signature);
@@ -72,11 +72,12 @@ namespace RuStoreSDK
 		{
 #if PLATFORM_ANDROID
 			FString methodSignature = JavaMethodSignature::MakeVoid(args...);
-			jmethodID javaMethodID = FJavaWrapper::FindMethod(env, javaClass, TCHAR_TO_ANSI(*methodName), TCHAR_TO_ANSI(*methodSignature), false);
 
 #ifdef RuStoreDebug
 			_LogInfo(RuStoreDebug, methodSignature);
 #endif
+
+			jmethodID javaMethodID = FJavaWrapper::FindMethod(env, javaClass, TCHAR_TO_ANSI(*methodName), TCHAR_TO_ANSI(*methodSignature), false);
 
 			FJavaWrapper::CallVoidMethod(env, javaObject, javaMethodID, JavaTypeConverter::SetValue(env, args)...);
 #endif
@@ -121,7 +122,7 @@ namespace RuStoreSDK
 		}
 
 		template<typename... Args>
-		int CallLong(FString methodName, Args... args)
+		long CallLong(FString methodName, Args... args)
 		{
 			long result = 0;
 
@@ -134,6 +135,63 @@ namespace RuStoreSDK
 #endif
 
 			result = (long)env->CallLongMethod(javaObject, javaMethodID, JavaTypeConverter::SetValue(env, args)...);
+#endif
+
+			return result;
+		}
+
+		template<typename... Args>
+		float CallFloat(FString methodName, Args... args)
+		{
+			float result = 0;
+
+#if PLATFORM_ANDROID
+			FString methodSignature = JavaMethodSignature::MakeFloat(args...);
+			jmethodID javaMethodID = FJavaWrapper::FindMethod(env, javaClass, TCHAR_TO_ANSI(*methodName), TCHAR_TO_ANSI(*methodSignature), false);
+
+#ifdef RuStoreDebug
+			_LogInfo(RuStoreDebug, methodSignature);
+#endif
+
+			result = (float)env->CallFloatMethod(javaObject, javaMethodID, JavaTypeConverter::SetValue(env, args)...);
+#endif
+
+			return result;
+		}
+
+		template<typename... Args>
+		float CallDouble(FString methodName, Args... args)
+		{
+			double result = 0;
+
+#if PLATFORM_ANDROID
+			FString methodSignature = JavaMethodSignature::MakeDouble(args...);
+			jmethodID javaMethodID = FJavaWrapper::FindMethod(env, javaClass, TCHAR_TO_ANSI(*methodName), TCHAR_TO_ANSI(*methodSignature), false);
+
+#ifdef RuStoreDebug
+			_LogInfo(RuStoreDebug, methodSignature);
+#endif
+
+			result = (double)env->CallDoubleMethod(javaObject, javaMethodID, JavaTypeConverter::SetValue(env, args)...);
+#endif
+
+			return result;
+		}
+
+		template<typename... Args>
+		bool CallBool(FString methodName, Args... args)
+		{
+			bool result = false;
+
+#if PLATFORM_ANDROID
+			FString methodSignature = JavaMethodSignature::MakeBool(args...);
+			jmethodID javaMethodID = FJavaWrapper::FindMethod(env, javaClass, TCHAR_TO_ANSI(*methodName), TCHAR_TO_ANSI(*methodSignature), false);
+
+#ifdef RuStoreDebug
+			_LogInfo(RuStoreDebug, methodSignature);
+#endif
+
+			result = (bool)env->CallBooleanMethod(javaObject, javaMethodID, JavaTypeConverter::SetValue(env, args)...);
 #endif
 
 			return result;

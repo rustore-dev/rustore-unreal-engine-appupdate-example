@@ -13,7 +13,7 @@ namespace RuStoreSDK
             TFunction<void(long, int)> onSuccess,
             TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure,
             TFunction<void(RuStoreListener*)> onFinish
-        ) : SimpleResponseListenerT<int>("com/Plugins/RuStoreAppUpdate/UpdateFlowResultListenerWrapper", "ru/rustore/unitysdk/appupdate/callbacks/UpdateFlowResultListener", onSuccess, onFailure, onFinish)
+        ) : SimpleResponseListenerT<int>("ru/rustore/unitysdk/appupdate/wrappers/UpdateFlowResultListenerWrapper", "ru/rustore/unitysdk/appupdate/callbacks/UpdateFlowResultListener", onSuccess, onFailure, onFinish)
         {
         }
 

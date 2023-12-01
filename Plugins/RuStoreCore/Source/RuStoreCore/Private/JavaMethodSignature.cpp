@@ -4,12 +4,6 @@
 
 using namespace RuStoreSDK;
 
-template <typename T>
-FString JavaMethodSignature::getName(T) { return TEXT(""); }
-FString JavaMethodSignature::getName(IAndroidClasses* obj) { return FString::Printf(TEXT("L%s;"), *obj->GetName()); }
-FString JavaMethodSignature::getName(AndroidJavaObject* obj) { return FString::Printf(TEXT("L%s;"), *obj->GetName()); }
-FString JavaMethodSignature::getName(JavaActivity* obj) { return FString::Printf(TEXT("L%s;"), *obj->GetName()); }
-FString JavaMethodSignature::getName(JavaApplication* obj) { return FString::Printf(TEXT("L%s;"), *obj->GetName()); }
 FString JavaMethodSignature::getName(void) { return TEXT("V"); }
 FString JavaMethodSignature::getName(bool) { return TEXT("Z"); }
 FString JavaMethodSignature::getName(unsigned char) { return TEXT("B"); }

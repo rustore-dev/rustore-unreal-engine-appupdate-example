@@ -25,7 +25,7 @@ FURuStoreError* UpdateFlowResultListenerImpl::ConvertError(AndroidJavaObject* er
 #if PLATFORM_ANDROID
 extern "C"
 {
-    JNIEXPORT void JNICALL Java_com_Plugins_RuStoreAppUpdate_UpdateFlowResultListenerWrapper_NativeOnFailure(JNIEnv*, jobject, jlong pointer, jthrowable throwable)
+    JNIEXPORT void JNICALL Java_ru_rustore_unitysdk_appupdate_wrappers_UpdateFlowResultListenerWrapper_NativeOnFailure(JNIEnv*, jobject, jlong pointer, jthrowable throwable)
     {
         auto obj = new AndroidJavaObject(throwable);
         obj->UpdateToGlobalRef();
@@ -34,7 +34,7 @@ extern "C"
         castobj->OnFailure(obj);
     }
 
-    JNIEXPORT void JNICALL Java_com_Plugins_RuStoreAppUpdate_UpdateFlowResultListenerWrapper_NativeOnSuccess(JNIEnv*, jobject, jlong pointer, jint result)
+    JNIEXPORT void JNICALL Java_ru_rustore_unitysdk_appupdate_wrappers_UpdateFlowResultListenerWrapper_NativeOnSuccess(JNIEnv*, jobject, jlong pointer, jint result)
     {
         auto castobj = reinterpret_cast<UpdateFlowResultListenerImpl*>(pointer);
         castobj->OnSuccess((int)result);

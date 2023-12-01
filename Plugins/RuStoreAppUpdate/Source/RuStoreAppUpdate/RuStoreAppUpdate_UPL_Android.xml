@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <prebuildCopies>
-    <copyDir src="$S(PluginDir)/Private/Java" dst="$S(BuildDir)/src/com/Plugins/RuStoreAppUpdate" />
-  </prebuildCopies>
-
   <resourceCopies>
-    <copyDir src="$S(PluginDir)/ThirdParty/Android" dst="$S(BuildDir)/libs" />
+    <copyDir src="$S(PluginDir)/ThirdParty/Android/libs" dst="$S(BuildDir)/libs" />
   </resourceCopies>
 
   <buildGradleAdditions>
@@ -19,7 +15,7 @@
       
       dependencies {
         // RuStore AppUpdate
-        implementation("ru.rustore.sdk:appupdate:0.2.0$appupdate_type")
+        implementation("ru.rustore.sdk:appupdate:1.0.0$appupdate_type")
         implementation fileTree(include: ["RuStoreUnityAppUpdate${appupdate_type}.aar"], dir: 'src/main/libs')
       }
     </insert>
