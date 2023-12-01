@@ -5,26 +5,6 @@
     <copyDir src="$S(PluginDir)/ThirdParty/Android/libs" dst="$S(BuildDir)/libs" />
   </resourceCopies>
 
-  <androidManifestUpdates>
-    <!-- For each activity -->
-    <loopElements tag="activity">
-      <!-- Find UE GameActivity -->
-      <setStringFromAttribute result="activityName" tag="$" name="android:name" />
-      <setBoolIsEqual result="bIsUE4GameActivity" arg1="$S(activityName)" arg2="com.epicgames.ue4.GameActivity" />
-      <setBoolIsEqual result="bIsUE5GameActivity" arg1="$S(activityName)" arg2="com.epicgames.unreal.GameActivity" />
-      <setBoolOr result="bIsGameActivity" arg1="$B(bIsUE4GameActivity)" arg2="$B(bIsUE5GameActivity)" />
-
-      <!-- Add android:exported attribute for UE4 GameActivity -->
-      <if condition="bIsUE4GameActivity">
-        <true>
-          <addAttribute tag="$" name="android:exported" value="true"/>
-        </true>
-      </if>
-
-      <!-- For each activity -->
-    </loopElements>
-  </androidManifestUpdates>
-
   <buildGradleAdditions>
     <insert>
       ext.appupdate_type = ''
