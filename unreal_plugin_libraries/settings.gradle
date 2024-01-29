@@ -1,0 +1,3 @@
+rootProject.name = "unreal_plugin_libraries"
+include ':RuStoreUnityCore'
+include ':RuStoreUnityAppUpdate'
