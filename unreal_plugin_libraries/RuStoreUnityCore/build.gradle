@@ -1,0 +1,58 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+android {
+    compileSdkVersion 33
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        minSdkVersion 24
+        targetSdkVersion 33
+        versionCode sdk_version_code
+        versionName "${rustore_core_version}"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "ru.rustore.sdk:core:$rustore_core_version$rustore_sdk_type"
+    compileOnly fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+}
+
+task copyAARUnreal(type: Copy) {
+    from    ( [buildDir.absolutePath, 'outputs', 'aar'].join(File.separator) )
+    include ( "${project.name}-release.aar" )
+    into    ( [rootDir.absolutePath, '..', 'unreal_example', 'Plugins', 'RuStoreCore', 'Source', 'RuStoreCore', 'ThirdParty', 'Android', 'libs' ].join(File.separator) )
+    rename  ("${project.name}-release.aar", "${project.name}${rustore_sdk_type}.aar")
+}
+
+afterEvaluate {
+    assembleRelease.finalizedBy('copyAARUnreal')
+}
