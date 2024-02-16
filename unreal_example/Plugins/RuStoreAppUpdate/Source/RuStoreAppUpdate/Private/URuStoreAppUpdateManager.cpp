@@ -12,7 +12,7 @@ const FString URuStoreAppUpdateManager::PluginVersion = "1.0";
 URuStoreAppUpdateManager* URuStoreAppUpdateManager::_instance = nullptr;
 bool URuStoreAppUpdateManager::_bIsInstanceInitialized = false;
 
-bool URuStoreAppUpdateManager::getIsInitialized()
+bool URuStoreAppUpdateManager::GetIsInitialized()
 {
     return bIsInitialized;
 }
