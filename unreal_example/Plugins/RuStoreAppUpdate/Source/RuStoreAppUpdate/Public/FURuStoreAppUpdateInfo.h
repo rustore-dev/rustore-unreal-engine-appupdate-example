@@ -26,5 +26,5 @@ struct RUSTOREAPPUPDATE_API FURuStoreAppUpdateInfo
     EURuStoreInstallStatus installStatus;
     
     UPROPERTY(BlueprintReadOnly)
-    int availableVersionCode;
+    int64 availableVersionCode;
 };
