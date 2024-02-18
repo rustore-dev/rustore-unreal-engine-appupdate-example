@@ -20,6 +20,7 @@
 
 Вы можете ознакомиться с демонстрационным приложением содержащим представление работы всех методов sdk:
 - [README](APP_EXAMPLE.md)
+- [unreal_example](https://gitflic.ru/project/rustore/rustore-unreal-engine-appupdate-example/file?file=unreal_example)
 
 
 ### История изменений
@@ -34,4 +35,4 @@
 
 ### Техническая поддержка
 
-Дополнительная помощь и инструкции доступны на странице [help.rustore.ru](https://help.rustore.ru/) и по электронной почте [support@rustore.ru](mailto:support@rustore.ru).
+Дополнительная помощь и инструкции доступны на странице [rustore.ru/help/](https://www.rustore.ru/help/) и по электронной почте [support@rustore.ru](mailto:support@rustore.ru).
