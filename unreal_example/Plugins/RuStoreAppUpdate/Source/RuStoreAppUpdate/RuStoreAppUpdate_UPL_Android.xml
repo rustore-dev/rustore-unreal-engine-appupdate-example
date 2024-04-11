@@ -15,7 +15,7 @@
       
       dependencies {
         // RuStore AppUpdate
-        implementation("ru.rustore.sdk:appupdate:2.+$appupdate_type")
+        implementation("ru.rustore.sdk:appupdate:3.+$appupdate_type")
         implementation fileTree(include: ["RuStoreUnityAppUpdate${appupdate_type}.aar"], dir: 'src/main/libs')
       }
     </insert>

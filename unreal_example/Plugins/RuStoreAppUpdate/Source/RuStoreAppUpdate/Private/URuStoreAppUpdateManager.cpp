@@ -165,13 +165,24 @@ long URuStoreAppUpdateManager::StartUpdateFlow(EURuStoreAppUpdateOptions appUpda
     return listener->GetId();
 }
 
-long URuStoreAppUpdateManager::CompleteUpdate(TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure)
+long URuStoreAppUpdateManager::CompleteUpdate(EURuStoreAppUpdateOptions appUpdateOptions, TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure)
 {
     if (!URuStoreCore::IsPlatformSupported(onFailure)) return 0;
     if (!bIsInitialized) return 0;
 
     auto listener = ListenerBind(new AppUpdateErrorListenerImpl(onFailure, [this](RuStoreListener* item) { ListenerUnbind(item); }));
-    _clientWrapper->CallVoid("completeUpdate", listener->GetJWrapper());
+
+    switch (appUpdateOptions)
+    {
+    case EURuStoreAppUpdateOptions::DELAYED:
+        _clientWrapper->CallVoid("completeUpdateDelayed", listener->GetJWrapper());
+        break;
+    case EURuStoreAppUpdateOptions::SILENT:
+        _clientWrapper->CallVoid("completeUpdateSilent", listener->GetJWrapper());
+        break;
+    default:
+        _clientWrapper->CallVoid("completeUpdateDelayed", listener->GetJWrapper());
+    }
 
     return listener->GetId();
 }
@@ -201,9 +212,10 @@ void URuStoreAppUpdateManager::StartUpdateFlow(int64& requestId, EURuStoreAppUpd
     );
 }
 
-void URuStoreAppUpdateManager::CompleteUpdate(int64& requestId)
+void URuStoreAppUpdateManager::CompleteUpdate(int64& requestId, EURuStoreAppUpdateOptions appUpdateOptions)
 {
     requestId = CompleteUpdate(
+        appUpdateOptions,
         [this](long requestId, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe> error) {
             OnCompleteUpdateError.Broadcast(requestId, *error);
         }
