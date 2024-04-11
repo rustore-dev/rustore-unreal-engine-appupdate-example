@@ -1,6 +1,6 @@
 ext {
     rustore_core_version = '1.0.0'
-    rustore_appupdate_version = '2.+'
+    rustore_appupdate_version = '3.+'
     rustore_sdk_type = ''
     sdk_version_code = 1
 }
