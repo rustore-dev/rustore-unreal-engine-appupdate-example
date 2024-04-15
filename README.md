@@ -29,7 +29,7 @@
 ### Сборка примера приложения
 
 Вы можете ознакомиться с демонстрационным приложением содержащим представление работы всех методов sdk:
-- [README](APP_EXAMPLE.md)
+- [README](unreal_example/README.md)
 - [unreal_example](https://gitflic.ru/project/rustore/rustore-unreal-engine-appupdate-example/file?file=unreal_example)
 
 
