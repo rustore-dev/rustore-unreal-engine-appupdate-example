@@ -8,11 +8,12 @@ UCompleteUpdateNode::UCompleteUpdateNode(const FObjectInitializer& ObjectInitial
 {
 }
 
-UCompleteUpdateNode* UCompleteUpdateNode::CompleteUpdateAsync(URuStoreAppUpdateManager* target)
+UCompleteUpdateNode* UCompleteUpdateNode::CompleteUpdateAsync(URuStoreAppUpdateManager* target, EURuStoreAppUpdateOptions appUpdateOptions)
 {
     auto node = NewObject<UCompleteUpdateNode>(GetTransientPackage());
     
     target->CompleteUpdate(
+        appUpdateOptions,
         [node](long requestId, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe> error) {
             node->Failure.Broadcast(*error);
         }

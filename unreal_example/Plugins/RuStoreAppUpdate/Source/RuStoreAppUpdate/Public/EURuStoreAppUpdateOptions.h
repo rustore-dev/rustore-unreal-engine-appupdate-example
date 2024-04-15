@@ -10,5 +10,6 @@ enum class EURuStoreAppUpdateOptions : uint8
 {
     DELAYED UMETA(DisplayName = "DELAYED"),
     SILENT UMETA(DisplayName = "SILENT"),
-    IMMEDIATE UMETA(DisplayName = "IMMEDIATE")
+    IMMEDIATE UMETA(DisplayName = "IMMEDIATE"),
+    FLEXIBLE UMETA(DisplayName = "FLEXIBLE")
 };

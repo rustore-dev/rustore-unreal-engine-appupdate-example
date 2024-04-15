@@ -64,7 +64,7 @@ public:
 
     long GetAppUpdateInfo(TFunction<void(long, TSharedPtr<FURuStoreAppUpdateInfo, ESPMode::ThreadSafe>)> onSuccess, TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure);
     long StartUpdateFlow(EURuStoreAppUpdateOptions appUpdateOptions, TFunction<void(long, EURuStoreUpdateFlowResult)> onSuccess, TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure);
-    long CompleteUpdate(TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure);
+    long CompleteUpdate(EURuStoreAppUpdateOptions appUpdateOptions, TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure);
 
     UFUNCTION(BlueprintCallable, Category = "RuStore AppUpdate Manager")
     bool CheckIsImmediateUpdateAllowed();
@@ -99,7 +99,7 @@ public:
 
     // 
     UFUNCTION(BlueprintCallable, Category = "RuStore AppUpdate Manager")
-    void CompleteUpdate(int64& requestId);
+    void CompleteUpdate(int64& requestId, EURuStoreAppUpdateOptions appUpdateOptions);
 
     UPROPERTY(BlueprintAssignable, Category = "RuStore AppUpdate Manager")
     FRuStoreCompleteUpdateErrorDelegate OnCompleteUpdateError;
