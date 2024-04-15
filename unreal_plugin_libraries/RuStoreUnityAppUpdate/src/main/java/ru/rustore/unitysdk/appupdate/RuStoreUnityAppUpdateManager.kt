@@ -92,8 +92,8 @@ object RuStoreUnityAppUpdateManager {
         completeUpdate(AppUpdateOptions.Builder().appUpdateType(AppUpdateType.SILENT).build(), listener)
     }
 
-    fun completeUpdateDelayed(listener: ErrorListener) {
-        completeUpdate(AppUpdateOptions.Builder().build(), listener)
+    fun completeUpdateFlexible(listener: ErrorListener) {
+        completeUpdate(AppUpdateOptions.Builder().appUpdateType(AppUpdateType.FLEXIBLE).build(), listener)
     }
 
     private fun completeUpdate(appUpdateOptions: AppUpdateOptions, listener: ErrorListener) {
