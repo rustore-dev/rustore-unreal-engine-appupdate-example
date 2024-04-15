@@ -174,14 +174,14 @@ long URuStoreAppUpdateManager::CompleteUpdate(EURuStoreAppUpdateOptions appUpdat
 
     switch (appUpdateOptions)
     {
-    case EURuStoreAppUpdateOptions::DELAYED:
-        _clientWrapper->CallVoid("completeUpdateDelayed", listener->GetJWrapper());
+    case EURuStoreAppUpdateOptions::FLEXIBLE:
+        _clientWrapper->CallVoid("completeUpdateFlexible", listener->GetJWrapper());
         break;
     case EURuStoreAppUpdateOptions::SILENT:
         _clientWrapper->CallVoid("completeUpdateSilent", listener->GetJWrapper());
         break;
     default:
-        _clientWrapper->CallVoid("completeUpdateDelayed", listener->GetJWrapper());
+        _clientWrapper->CallVoid("completeUpdateFlexible", listener->GetJWrapper());
     }
 
     return listener->GetId();
