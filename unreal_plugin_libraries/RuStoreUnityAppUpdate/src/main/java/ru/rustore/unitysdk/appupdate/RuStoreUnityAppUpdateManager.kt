@@ -88,8 +88,16 @@ object RuStoreUnityAppUpdateManager {
         }
     }
 
-    fun completeUpdate(listener: ErrorListener) {
-        updateManager.completeUpdate().addOnFailureListener {
+    fun completeUpdateSilent(listener: ErrorListener) {
+        completeUpdate(AppUpdateOptions.Builder().appUpdateType(AppUpdateType.SILENT).build(), listener)
+    }
+
+    fun completeUpdateFlexible(listener: ErrorListener) {
+        completeUpdate(AppUpdateOptions.Builder().appUpdateType(AppUpdateType.FLEXIBLE).build(), listener)
+    }
+
+    private fun completeUpdate(appUpdateOptions: AppUpdateOptions, listener: ErrorListener) {
+        updateManager.completeUpdate(appUpdateOptions).addOnFailureListener {
             throwable -> listener.OnFailure(throwable)
         }
     }

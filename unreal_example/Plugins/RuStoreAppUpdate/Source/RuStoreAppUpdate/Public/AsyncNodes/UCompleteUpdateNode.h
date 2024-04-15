@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Kismet/BlueprintAsyncActionBase.h"
+#include "EURuStoreAppUpdateOptions.h"
 #include "URuStoreAppUpdateManager.h"
 #include "UCompleteUpdateNode.generated.h"
 
@@ -18,5 +19,5 @@ public:
     FCompleteUpdatePin Failure;
 
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", WorldContext = "WorldContextObject"), Category = "RuStore AppUpdate Manager")
-    static UCompleteUpdateNode* CompleteUpdateAsync(URuStoreAppUpdateManager* target);
+    static UCompleteUpdateNode* CompleteUpdateAsync(URuStoreAppUpdateManager* target, EURuStoreAppUpdateOptions appUpdateOptions);
 };
