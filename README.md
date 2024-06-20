@@ -7,16 +7,6 @@
 Репозиторий содержит плагины “RuStoreAppUpdate” и “RuStoreCore”, а также демонстрационное приложение с примерами использования и настроек. Поддерживаются версии UE 4.26 и выше.
 
 
-### Сборка плагина
-1. Откройте в вашей IDE проект Android из папки _“unreal_plugin_libraries”_.
-
-2. Выполните сборку проекта командой gradle assemble.
-
-При успешном выполнении сборки в папках _“unreal_example / Plugins / RuStoreAppUpdate / Source / RuStoreAppUpdate / ThirdParty / Android / libs”_ и _“unreal_example / Plugins / RuStoreCore / Source / RuStoreCore / ThirdParty / Android / libs”_ будут созданы файлы:
-- RuStoreUnityAppUpdate.aar
-- RuStoreUnityCore.aar
-
-
 ### Установка плагина в свой проект
 
 1. Скопируйте содержимое папки _“Plugins”_ в папку _“Plugins”_ внутри своего проекта. Перезапустите Unreal Engine, в списке плагинов (Edit → Plugins → Project → Mobile) отметьте плагины “RuStoreAppUpdate” и “RuStoreCore”.
@@ -31,6 +21,21 @@
 Вы можете ознакомиться с демонстрационным приложением содержащим представление работы всех методов sdk:
 - [README](unreal_example/README.md)
 - [unreal_example](https://gitflic.ru/project/rustore/rustore-unreal-engine-appupdate-example/file?file=unreal_example)
+
+
+### Пересборка плагина
+
+Если вам необходимо изменить код библиотек плагинов, вы можете внести изменения и пересобрать подключаемые .aar файлы.
+
+1. Откройте в вашей IDE проект Android из папки _“unreal_plugin_libraries”_.
+
+2. Внесите необходимые изменения.
+
+3. Выполните сборку проекта командой gradle assemble.
+
+При успешном выполнении сборки в папках _“unreal_example / Plugins / RuStoreAppUpdate / Source / RuStoreAppUpdate / ThirdParty / Android / libs”_ и _“unreal_example / Plugins / RuStoreCore / Source / RuStoreCore / ThirdParty / Android / libs”_ будут обновлены файлы:
+- RuStoreUnityAppUpdate.aar
+- RuStoreUnityCore.aar
 
 
 ### История изменений
