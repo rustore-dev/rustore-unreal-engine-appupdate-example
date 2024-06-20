@@ -15,7 +15,6 @@
 *.so
 *.dylib
 *.dll
-*.aar
 
 # Fortran module files
 *.mod
@@ -77,3 +76,6 @@ DerivedDataCache/*
 # Debug libraries
 Plugins/RuStoreAccessQA/
 Plugins/RuStoreBuildForAVD/
+
+# Project settings
+Config/DefaultEngine.ini
