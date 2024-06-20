@@ -8,7 +8,7 @@ buildscript {
     ext.kotlin_version = "1.7.10"
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.1.1'
@@ -22,12 +22,9 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         maven {
             url = uri("https://artifactory-external.vkpartner.ru/artifactory/maven")
-        }
-        maven {
-            url uri("${rootProject.projectDir}/repo")
         }
     }
 }
