@@ -1,17 +1,17 @@
 ext {
     rustore_core_version = '1.0.0'
-    rustore_appupdate_version = '3.+'
+    rustore_appupdate_version = '6.+'
     rustore_sdk_type = ''
     sdk_version_code = 1
 }
 buildscript {
-    ext.kotlin_version = "1.7.10"
+    ext.kotlin_version = "1.9.0"
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath 'com.android.tools.build:gradle:4.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
