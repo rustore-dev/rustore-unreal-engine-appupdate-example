@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         minSdkVersion 24
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode sdk_version_code
         versionName "${rustore_appupdate_version}"
 
