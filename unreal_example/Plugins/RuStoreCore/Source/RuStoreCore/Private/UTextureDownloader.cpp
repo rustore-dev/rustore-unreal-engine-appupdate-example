@@ -3,6 +3,7 @@
 #include "UTextureDownloader.h"
 #include "AndroidJavaClass.h"
 #include "Async/Async.h"
+#include "Misc/EngineVersionComparison.h"
 #include "Serialization/BulkData.h"
 
 using namespace RuStoreSDK;
@@ -56,9 +57,17 @@ UTexture2D* UTextureDownloader::DownloadImageAsTexture2D(FString url)
     }
 
     UTexture2D* texture2D = UTexture2D::CreateTransient(srcWidth, srcHeight, EPixelFormat::PF_B8G8R8A8);
-    void* data = texture2D->PlatformData->Mips[0].BulkData.Lock(EBulkDataLockFlags::LOCK_READ_WRITE);
+    FByteBulkData* bulkData;
+
+#if UE_VERSION_OLDER_THAN(5, 1, 0)
+    bulkData = &texture2D->PlatformData->Mips[0].BulkData;
+#else
+    bulkData = &texture2D->GetPlatformData()->Mips[0].BulkData;
+#endif
+
+    void* data = bulkData->Lock(EBulkDataLockFlags::LOCK_READ_WRITE);
     FMemory::Memcpy(data, rawData->GetData(), rawData->Num());
-    texture2D->PlatformData->Mips[0].BulkData.Unlock();
+    bulkData->Unlock();
     texture2D->UpdateResource();
     texture2D->Filter = TextureFilter::TF_Trilinear;
 
