@@ -1,5 +1,8 @@
 ## История изменений
 
+### Release 8.0.0
+- Версия sdk appUpdate 8.0.0.
+
 ### Release 7.0.0
 - Версия sdk appUpdate 7.0.0.
 
