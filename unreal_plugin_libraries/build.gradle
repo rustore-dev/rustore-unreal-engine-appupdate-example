@@ -1,8 +1,8 @@
 ext {
-    rustore_appupdate_version = '7.0.0'
+    rustore_appupdate_version = '8.0.0'
     rustore_core_version = rustore_appupdate_version
     rustore_sdk_type = ''
-    sdk_version_code = 700
+    sdk_version_code = rustore_appupdate_version.split('-')[0].replaceAll(/\D/, '').toInteger()
 }
 buildscript {
     ext.kotlin_version = "1.9.0"
