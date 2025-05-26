@@ -52,4 +52,4 @@
 
 Дополнительная помощь и инструкции доступны на странице [rustore.ru/help/](https://www.rustore.ru/help/) и по электронной почте [support@rustore.ru](mailto:support@rustore.ru).
 
-[10]: https://www.rustore.ru/help/sdk/updates/unreal/8-0-0
+[10]: https://www.rustore.ru/help/sdk/updates/unreal/9-0-1
