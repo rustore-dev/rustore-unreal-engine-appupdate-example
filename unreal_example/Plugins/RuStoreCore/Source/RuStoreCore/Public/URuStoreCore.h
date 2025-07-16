@@ -20,6 +20,7 @@ private:
 
 	bool bIsInitialized = false;
 	AndroidJavaObject* _clientWrapper = nullptr;
+	AndroidJavaObject* _playerProviderWrapper = nullptr;
 	UnrealPlayerImpl* unrealPlayer = nullptr;
 
 public:
@@ -90,4 +91,16 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "RuStore Core")
 	static void RestartAndroidApp();
+
+	UFUNCTION(BlueprintCallable, Category = "RuStore Core")
+	bool IsRuStoreInstalled();
+
+	UFUNCTION(BlueprintCallable, Category = "RuStore Core")
+	void OpenRuStoreDownloadInstruction();
+
+	UFUNCTION(BlueprintCallable, Category = "RuStore Core")
+	void OpenRuStore();
+
+	UFUNCTION(BlueprintCallable, Category = "RuStore Core")
+	void OpenRuStoreAuthorization();
 };

@@ -6,8 +6,7 @@ object PlayerProvider {
 
     private var externalProvider: IPlayerProvider? = null
 
-    fun getCurrentActivity(): Activity?
-    {
+    fun getCurrentActivity(): Activity? {
         return externalProvider?.getCurrentActivity()
     }
 

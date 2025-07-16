@@ -40,6 +40,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "ru.rustore.sdk:core:$rustore_core_version$rustore_sdk_type"
+    implementation "com.google.code.gson:gson:2.10.1"
     compileOnly fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
