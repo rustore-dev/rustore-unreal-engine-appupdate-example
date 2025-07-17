@@ -5,7 +5,7 @@
 #include "JavaActivity.h"
 #include "JavaApplication.h"
 
-const FString URuStoreCore::PluginVersion = "8.0.0";
+const FString URuStoreCore::PluginVersion = "9.1.0";
 URuStoreCore* URuStoreCore::_instance = nullptr;
 bool URuStoreCore::_bIsInstanceInitialized = false;
 
@@ -30,9 +30,12 @@ bool URuStoreCore::Init()
 
     unrealPlayer = new UnrealPlayerImpl();
 
-    auto clientJavaClass = MakeShared<AndroidJavaClass>("ru/rustore/unitysdk/core/PlayerProvider");
+    auto playerProviderJavaClass = MakeShared<AndroidJavaClass>("ru/rustore/unitysdk/core/PlayerProvider");
+    _playerProviderWrapper = playerProviderJavaClass->GetStaticAJObject("INSTANCE");
+    _playerProviderWrapper->CallVoid("setExternalProvider", unrealPlayer->GetJWrapper());
+
+    auto clientJavaClass = MakeShared<AndroidJavaClass>("ru/rustore/unitysdk/core/RuStoreUnityCoreClient");
     _clientWrapper = clientJavaClass->GetStaticAJObject("INSTANCE");
-    _clientWrapper->CallVoid("setExternalProvider", unrealPlayer->GetJWrapper());
 
     bIsInitialized = true;
 
@@ -44,8 +47,9 @@ void URuStoreCore::Dispose()
     if (bIsInitialized)
     {
         bIsInitialized = false;
-        delete unrealPlayer;
         delete _clientWrapper;
+        delete _playerProviderWrapper;
+        delete unrealPlayer;
         _instance->RemoveFromRoot();
     }
 }
@@ -184,4 +188,25 @@ void URuStoreCore::RestartAndroidApp() {
     auto application = MakeShared<JavaApplication>();
 
     return javaClass->CallStaticVoid("RestartAndroidApp", &application.Get());
+}
+
+bool URuStoreCore::IsRuStoreInstalled() {
+    auto activity = MakeShared<JavaActivity>();
+
+    return _clientWrapper->CallBool("isRuStoreInstalled", &activity.Get());
+}
+
+void URuStoreCore::OpenRuStoreDownloadInstruction() {
+    auto activity = MakeShared<JavaActivity>();
+    _clientWrapper->CallVoid("openRuStoreDownloadInstruction", &activity.Get());
+}
+
+void URuStoreCore::OpenRuStore() {
+    auto activity = MakeShared<JavaActivity>();
+    _clientWrapper->CallVoid("openRuStore", &activity.Get());
+}
+
+void URuStoreCore::OpenRuStoreAuthorization() {
+    auto activity = MakeShared<JavaActivity>();
+    _clientWrapper->CallVoid("openRuStoreAuthorization", &activity.Get());
 }
