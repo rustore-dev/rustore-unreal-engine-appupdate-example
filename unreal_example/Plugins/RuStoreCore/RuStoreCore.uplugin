@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
-	"Version": 90100,
-	"VersionName": "9.1.0",
+	"Version": 100000,
+	"VersionName": "10.0.0",
 	"FriendlyName": "RuStore Core",
 	"Description": "",
 	"Category": "Mobile",

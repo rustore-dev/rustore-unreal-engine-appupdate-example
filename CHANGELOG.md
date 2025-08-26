@@ -1,5 +1,8 @@
 ## История изменений
 
+### Release 10.0.0
+- Версия sdk appUpdate 10.0.0.
+
 ### Release 9.1.0
 - Версия sdk appUpdate 9.1.0.
 

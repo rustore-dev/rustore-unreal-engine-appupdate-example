@@ -73,7 +73,7 @@
 
 Дополнительная помощь и инструкции доступны на странице [rustore.ru/help/](https://www.rustore.ru/help/) и по электронной почте [support@rustore.ru](mailto:support@rustore.ru).
 
-[10]: https://www.rustore.ru/help/sdk/updates/unreal/9-1-0
-[20]: https://www.rustore.ru/help/sdk/updates/unreal/9-1-0#checkavailable
-[30]: https://www.rustore.ru/help/sdk/updates/unreal/9-1-0#scenariodelayedupdate
-[40]: https://www.rustore.ru/help/sdk/updates/unreal/9-1-0#installupdatesilent
+[10]: https://www.rustore.ru/help/sdk/updates/unreal/10-0-0
+[20]: https://www.rustore.ru/help/sdk/updates/unreal/10-0-0#checkavailable
+[30]: https://www.rustore.ru/help/sdk/updates/unreal/10-0-0#scenariodelayedupdate
+[40]: https://www.rustore.ru/help/sdk/updates/unreal/10-0-0#installupdatesilent
