@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <buildGradleAdditions>
+    <insert>
+      repositories {
+        maven {
+          url 'https://nexus-external.rustore.ru/repository/maven-rustore-exposed'
+        }
+      }
+      
+      ext.appupdate_type = ''
+      
+      if (project.hasProperty('rustore_sdk_type')) {
+        appupdate_type = rustore_sdk_type
+      }
+      
+      dependencies {
+        // RuStore AppUpdate
+        implementation("ru.rustore.sdk:appupdate:10.5.1$appupdate_type")
+        implementation fileTree(include: ["RuStoreUnrealAppUpdate${appupdate_type}.aar"], dir: 'src/main/libs')
+      }
+    </insert>
+  </buildGradleAdditions>
+
+</root>

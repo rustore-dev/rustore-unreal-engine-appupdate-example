@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -25,15 +23,13 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FRuStoreCompleteUpdateErrorDelegate
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FRuStoreOnStateUpdatedInstanceDelegate, int64, listenerId, FURuStoreInstallState, state);
 
-using namespace RuStoreSDK;
-
 /*!
 @brief
     Класс реализует API для трех способов обновлений.
     В настоящий момент поддерживаются: отложенное, тихое (без UI от RuStore) и принудительное обновление.
 */
 UCLASS(Blueprintable)
-class RUSTOREAPPUPDATE_API URuStoreAppUpdateManager : public UObject, public IRuStoreInstallStateUpdateListenerInterface, public RuStoreListenerContainer
+class RUSTOREAPPUPDATE_API URuStoreAppUpdateManager : public UObject, public IRuStoreInstallStateUpdateListenerInterface, public RuStoreSDK::RuStoreListenerContainer
 {
 	GENERATED_BODY()
 
@@ -43,9 +39,9 @@ private:
 
     bool bIsInitialized = false;
     bool _bAllowNativeErrorHandling = false;
-    AndroidJavaObject* _clientWrapper = nullptr;
+    RuStoreSDK::AndroidJavaObject* _clientWrapper = nullptr;
 
-    TMap<void*, TSharedPtr<RuStoreListener, ESPMode::ThreadSafe>> stateListeners;
+    TMap<void*, TSharedPtr<RuStoreSDK::RuStoreListener, ESPMode::ThreadSafe>> stateListeners;
 
 public:
     /*!

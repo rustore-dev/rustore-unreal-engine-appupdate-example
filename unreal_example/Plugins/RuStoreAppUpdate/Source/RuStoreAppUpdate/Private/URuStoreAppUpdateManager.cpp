@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "URuStoreAppUpdateManager.h"
 #include "AppUpdateInfoResponseListenerImpl.h"
 #include "UpdateFlowResultListenerImpl.h"
@@ -8,7 +6,7 @@
 
 using namespace RuStoreSDK;
 
-const FString URuStoreAppUpdateManager::PluginVersion = "10.0.0";
+const FString URuStoreAppUpdateManager::PluginVersion = "10.5.1";
 URuStoreAppUpdateManager* URuStoreAppUpdateManager::_instance = nullptr;
 bool URuStoreAppUpdateManager::_bIsInstanceInitialized = false;
 
@@ -46,7 +44,7 @@ bool URuStoreAppUpdateManager::Init()
 
     URuStoreCore::Instance()->Init();
 
-    auto clientJavaClass = MakeShared<AndroidJavaClass>("ru/rustore/unitysdk/appupdate/RuStoreUnityAppUpdateManager");
+    auto clientJavaClass = MakeShared<AndroidJavaClass>("ru/rustore/unrealsdk/appupdate/RuStoreUnrealAppUpdateManager");
     _clientWrapper = clientJavaClass->GetStaticAJObject("INSTANCE");
     _clientWrapper->CallVoid("init", FString("unreal"));
 

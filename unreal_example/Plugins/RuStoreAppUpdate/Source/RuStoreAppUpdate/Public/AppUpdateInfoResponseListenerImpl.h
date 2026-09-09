@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "FURuStoreAppUpdateInfo.h"
@@ -14,7 +12,7 @@ namespace RuStoreSDK
             TFunction<void(long, TSharedPtr<FURuStoreAppUpdateInfo, ESPMode::ThreadSafe>)> onSuccess,
             TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure,
             TFunction<void(RuStoreListener*)> onFinish
-        ) : ResponseListener<FURuStoreAppUpdateInfo>("ru/rustore/unitysdk/appupdate/wrappers/AppUpdateInfoResponseListenerWrapper", "ru/rustore/unitysdk/appupdate/callbacks/AppUpdateInfoResponseListener", onSuccess, onFailure, onFinish)
+        ) : ResponseListener<FURuStoreAppUpdateInfo>("ru/rustore/unrealsdk/appupdate/wrappers/AppUpdateInfoResponseListenerWrapper", "ru/rustore/unrealsdk/appupdate/callbacks/AppUpdateInfoResponseListener", onSuccess, onFailure, onFinish)
         {
         }
 

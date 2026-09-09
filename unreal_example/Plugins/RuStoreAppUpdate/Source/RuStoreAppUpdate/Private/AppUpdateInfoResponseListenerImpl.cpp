@@ -1,51 +1,49 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "AppUpdateInfoResponseListenerImpl.h"
+#include "AndroidJavaObjectFactory.h"
 
-using namespace RuStoreSDK;
-
-FURuStoreError* AppUpdateInfoResponseListenerImpl::ConvertError(AndroidJavaObject* errorObject)
+namespace RuStoreSDK
 {
-    auto error = ResponseListener::ConvertError(errorObject);
-
-    if (error->name == "RuStoreInstallException")
+    FURuStoreError* AppUpdateInfoResponseListenerImpl::ConvertError(AndroidJavaObject* errorObject)
     {
-        auto errorCode = errorObject->GetInt("code");
-        error->description = FString::FromInt(errorCode);
+        auto error = ResponseListener::ConvertError(errorObject);
+
+        if (error->name == "RuStoreInstallException")
+        {
+            auto errorCode = errorObject->GetInt("code");
+            error->description = FString::FromInt(errorCode);
+        }
+
+        return error;
     }
 
-    return error;
-}
+    FURuStoreAppUpdateInfo* AppUpdateInfoResponseListenerImpl::ConvertResponse(AndroidJavaObject* responseObject)
+    {
+        auto response = new FURuStoreAppUpdateInfo();
 
-FURuStoreAppUpdateInfo* AppUpdateInfoResponseListenerImpl::ConvertResponse(AndroidJavaObject* responseObject)
-{
-    auto response = new FURuStoreAppUpdateInfo();
+        response->updateAvailability = (EURuStoreUpdateAvailability)responseObject->GetInt("updateAvailability");
+        response->installStatus = (EURuStoreInstallStatus)responseObject->GetInt("installStatus");
+        response->availableVersionCode = responseObject->GetLong("availableVersionCode");
 
-    response->updateAvailability = (EURuStoreUpdateAvailability)responseObject->GetInt("updateAvailability");
-    response->installStatus = (EURuStoreInstallStatus)responseObject->GetInt("installStatus");
-    response->availableVersionCode = responseObject->GetLong("availableVersionCode");
-
-    return response;
+        return response;
+    }
 }
 
 #if PLATFORM_ANDROID
 extern "C"
 {
-    JNIEXPORT void JNICALL Java_ru_rustore_unitysdk_appupdate_wrappers_AppUpdateInfoResponseListenerWrapper_NativeOnFailure(JNIEnv*, jobject, jlong pointer, jthrowable throwable)
+    JNIEXPORT void JNICALL Java_ru_rustore_unrealsdk_appupdate_wrappers_AppUpdateInfoResponseListenerWrapper_NativeOnFailure(JNIEnv*, jobject, jlong pointer, jthrowable throwable)
     {
-        auto obj = new AndroidJavaObject(throwable);
-        obj->UpdateToGlobalRef();
+        auto obj = RuStoreSDK::AndroidJavaObjectFactory::CreateFromThrowable(throwable);
 
-        auto castobj = reinterpret_cast<AppUpdateInfoResponseListenerImpl*>(pointer);
+        auto castobj = reinterpret_cast<RuStoreSDK::AppUpdateInfoResponseListenerImpl*>(pointer);
         castobj->OnFailure(obj);
     }
 
-    JNIEXPORT void JNICALL Java_ru_rustore_unitysdk_appupdate_wrappers_AppUpdateInfoResponseListenerWrapper_NativeOnSuccess(JNIEnv*, jobject, jlong pointer, jobject result)
+    JNIEXPORT void JNICALL Java_ru_rustore_unrealsdk_appupdate_wrappers_AppUpdateInfoResponseListenerWrapper_NativeOnSuccess(JNIEnv*, jobject, jlong pointer, jobject result)
     {
-        auto obj = new AndroidJavaObject(result);
-        obj->UpdateToGlobalRef();
+        auto obj = RuStoreSDK::AndroidJavaObjectFactory::CreateFromObject(result);
 
-        auto castobj = reinterpret_cast<AppUpdateInfoResponseListenerImpl*>(pointer);
+        auto castobj = reinterpret_cast<RuStoreSDK::AppUpdateInfoResponseListenerImpl*>(pointer);
         castobj->OnSuccess(obj);
     }
 }

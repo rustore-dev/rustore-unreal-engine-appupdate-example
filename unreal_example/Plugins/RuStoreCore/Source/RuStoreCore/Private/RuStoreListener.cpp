@@ -1,24 +1,21 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "RuStoreListener.h"
 
 using namespace RuStoreSDK;
 
 long RuStoreListener::counter = 0;
 
-RuStoreListener::RuStoreListener(FString className, FString interfaceName, bool bAsGlobalRef)
+RuStoreListener::RuStoreListener(const FString& className, const FString& interfaceName, bool bAsGlobalRef)
 {
 	id = ++counter;
 
 	this->className = className;
 	this->interfaceName = interfaceName;
 
-	long cppPointer = 0;
+	intptr_t cppPointer = 0;
 #if PLATFORM_ANDROID
-	cppPointer = (long)this;
+	cppPointer = (intptr_t)this;
 #endif
-	javaWrapper = new AndroidJavaObject(className, cppPointer, bAsGlobalRef);
-	javaWrapper->SetInterfaceName(interfaceName);
+	javaWrapper = AndroidJavaObjectFactory::CreateForListener(className, interfaceName, cppPointer, bAsGlobalRef);
 }
 
 RuStoreListener::~RuStoreListener()

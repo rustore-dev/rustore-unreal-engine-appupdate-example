@@ -1,42 +1,41 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "UpdateFlowResultListenerImpl.h"
+#include "AndroidJavaObjectFactory.h"
 
-using namespace RuStoreSDK;
-
-int UpdateFlowResultListenerImpl::ConvertResponse(int response)
+namespace RuStoreSDK
 {
-    return response + 1;
-}
-
-FURuStoreError* UpdateFlowResultListenerImpl::ConvertError(AndroidJavaObject* errorObject)
-{
-    auto error = SimpleResponseListenerT::ConvertError(errorObject);
-
-    if (error->name == "RuStoreInstallException")
+    int UpdateFlowResultListenerImpl::ConvertResponse(int response)
     {
-        auto errorCode = errorObject->GetInt("code");
-        error->description = FString::FromInt(errorCode);
+        return response + 1;
     }
 
-    return error;
+    FURuStoreError* UpdateFlowResultListenerImpl::ConvertError(AndroidJavaObject* errorObject)
+    {
+        auto error = SimpleResponseListenerT::ConvertError(errorObject);
+
+        if (error->name == "RuStoreInstallException")
+        {
+            auto errorCode = errorObject->GetInt("code");
+            error->description = FString::FromInt(errorCode);
+        }
+
+        return error;
+    }
 }
 
 #if PLATFORM_ANDROID
 extern "C"
 {
-    JNIEXPORT void JNICALL Java_ru_rustore_unitysdk_appupdate_wrappers_UpdateFlowResultListenerWrapper_NativeOnFailure(JNIEnv*, jobject, jlong pointer, jthrowable throwable)
+    JNIEXPORT void JNICALL Java_ru_rustore_unrealsdk_appupdate_wrappers_UpdateFlowResultListenerWrapper_NativeOnFailure(JNIEnv*, jobject, jlong pointer, jthrowable throwable)
     {
-        auto obj = new AndroidJavaObject(throwable);
-        obj->UpdateToGlobalRef();
+        auto obj = RuStoreSDK::AndroidJavaObjectFactory::CreateFromThrowable(throwable);
 
-        auto castobj = reinterpret_cast<UpdateFlowResultListenerImpl*>(pointer);
+        auto castobj = reinterpret_cast<RuStoreSDK::UpdateFlowResultListenerImpl*>(pointer);
         castobj->OnFailure(obj);
     }
 
-    JNIEXPORT void JNICALL Java_ru_rustore_unitysdk_appupdate_wrappers_UpdateFlowResultListenerWrapper_NativeOnSuccess(JNIEnv*, jobject, jlong pointer, jint result)
+    JNIEXPORT void JNICALL Java_ru_rustore_unrealsdk_appupdate_wrappers_UpdateFlowResultListenerWrapper_NativeOnSuccess(JNIEnv*, jobject, jlong pointer, jint result)
     {
-        auto castobj = reinterpret_cast<UpdateFlowResultListenerImpl*>(pointer);
+        auto castobj = reinterpret_cast<RuStoreSDK::UpdateFlowResultListenerImpl*>(pointer);
         castobj->OnSuccess((int)result);
     }
 }

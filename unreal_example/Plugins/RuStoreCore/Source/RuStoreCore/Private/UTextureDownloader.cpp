@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "UTextureDownloader.h"
 #include "AndroidJavaClass.h"
 #include "Async/Async.h"

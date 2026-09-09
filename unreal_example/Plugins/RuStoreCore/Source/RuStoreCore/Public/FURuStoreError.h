@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -21,6 +19,11 @@ struct RUSTORECORE_API FURuStoreError
 		name = "";
 		description = "";
 	}
+
+	virtual ~FURuStoreError() {}
+
+	static const FString TypeName;
+	virtual FString GetTypeName() { return TypeName; }
 
 	/*!
 	@brief

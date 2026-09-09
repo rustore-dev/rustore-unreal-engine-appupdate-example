@@ -1,9 +1,8 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "AndroidJavaObject.h"
+#include "AndroidJavaObjectFactory.h"
 
 //#define RuStoreDebug "RuStoreDebug"
 
@@ -34,9 +33,12 @@ namespace RuStoreSDK
             JNIEnv* env = FAndroidApplication::GetJavaEnv();
             jfieldID javaFieldID = env->GetStaticFieldID(javaClass, TCHAR_TO_ANSI(*fieldName), TCHAR_TO_ANSI(*_classSignature));
 
-            jobject javaObject = env->NewGlobalRef(env->GetStaticObjectField(javaClass, javaFieldID));
-            result = new AndroidJavaObject(javaClass, javaObject);
-            result->UpdateToGlobalRef();
+            jobject localRef = env->GetStaticObjectField(javaClass, javaFieldID);
+            if (localRef != nullptr)
+            {
+                result = AndroidJavaObjectFactory::CreateFromClassAndObject(javaClass, localRef);
+                env->DeleteLocalRef(localRef);
+            }
     #endif
 
             return result;
@@ -128,8 +130,11 @@ namespace RuStoreSDK
             jmethodID javaMethodId = env->GetStaticMethodID(javaClass, TCHAR_TO_ANSI(*methodName), TCHAR_TO_ANSI(*methodSignature));
 
             jobject localRef = (jobject)env->CallStaticObjectMethod(javaClass, javaMethodId, JavaTypeConverter::SetValue(env, args)...);
-            result = new AndroidJavaObject(localRef);
-            result->UpdateToGlobalRef();
+            if (localRef != nullptr)
+            {
+                result = AndroidJavaObjectFactory::CreateFromObject(localRef);
+                env->DeleteLocalRef(localRef);
+            }
 #endif
             return result;
         }
