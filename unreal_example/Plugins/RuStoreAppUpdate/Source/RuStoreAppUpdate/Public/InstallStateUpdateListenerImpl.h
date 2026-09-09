@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -17,7 +15,7 @@ namespace RuStoreSDK
     public:
         InstallStateUpdateListenerImpl(
             TFunction<void(long, TSharedPtr<FURuStoreInstallState, ESPMode::ThreadSafe>)> onStateUpdated
-        ) : RuStoreListener("ru/rustore/unitysdk/appupdate/wrappers/InstallStateUpdateListenerWrapper", "ru/rustore/sdk/appupdate/listener/InstallStateUpdateListener")
+        ) : RuStoreListener("ru/rustore/unrealsdk/appupdate/wrappers/InstallStateUpdateListenerWrapper", "ru/rustore/sdk/appupdate/listener/InstallStateUpdateListener")
         {
             _onStateUpdated = onStateUpdated;
         }

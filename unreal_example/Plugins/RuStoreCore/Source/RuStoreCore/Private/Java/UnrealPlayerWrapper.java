@@ -1,10 +1,8 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 package com.Plugins.RuStoreCore;
 
 import android.app.Activity;
 import android.util.Log;
-import ru.rustore.unitysdk.core.IPlayerProvider;
+import ru.rustore.unrealsdk.core.IPlayerProvider;
 
 public class UnrealPlayerWrapper implements IRuStoreListener, IPlayerProvider {
 

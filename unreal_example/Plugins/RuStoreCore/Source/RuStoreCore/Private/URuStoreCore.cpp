@@ -1,11 +1,9 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "URuStoreCore.h"
 #include "AndroidJavaClass.h"
 #include "JavaActivity.h"
 #include "JavaApplication.h"
 
-const FString URuStoreCore::PluginVersion = "9.1.0";
+const FString URuStoreCore::PluginVersion = "10.5.0";
 URuStoreCore* URuStoreCore::_instance = nullptr;
 bool URuStoreCore::_bIsInstanceInitialized = false;
 
@@ -30,11 +28,11 @@ bool URuStoreCore::Init()
 
     unrealPlayer = new UnrealPlayerImpl();
 
-    auto playerProviderJavaClass = MakeShared<AndroidJavaClass>("ru/rustore/unitysdk/core/PlayerProvider");
+    auto playerProviderJavaClass = MakeShared<AndroidJavaClass>("ru/rustore/unrealsdk/core/PlayerProvider");
     _playerProviderWrapper = playerProviderJavaClass->GetStaticAJObject("INSTANCE");
     _playerProviderWrapper->CallVoid("setExternalProvider", unrealPlayer->GetJWrapper());
 
-    auto clientJavaClass = MakeShared<AndroidJavaClass>("ru/rustore/unitysdk/core/RuStoreUnityCoreClient");
+    auto clientJavaClass = MakeShared<AndroidJavaClass>("ru/rustore/unrealsdk/core/RuStoreUnrealCoreClient");
     _clientWrapper = clientJavaClass->GetStaticAJObject("INSTANCE");
 
     bIsInitialized = true;
@@ -44,22 +42,29 @@ bool URuStoreCore::Init()
 
 void URuStoreCore::Dispose()
 {
-    if (bIsInitialized)
-    {
-        bIsInitialized = false;
-        delete _clientWrapper;
-        delete _playerProviderWrapper;
-        delete unrealPlayer;
-        _instance->RemoveFromRoot();
-    }
+    URuStoreCore* _instanceTemp = _instance;
+
+    _instance = nullptr;
+    _bIsInstanceInitialized = false;
+    bIsInitialized = false;
+
+    delete _clientWrapper;
+    _clientWrapper = nullptr;
+
+    delete _playerProviderWrapper;
+    _playerProviderWrapper = nullptr;
+
+    delete unrealPlayer;
+    unrealPlayer = nullptr;
+
+    if (_instanceTemp && _instanceTemp->IsRooted()) _instanceTemp->RemoveFromRoot();
 }
 
 void URuStoreCore::ConditionalBeginDestroy()
 {
-    Super::ConditionalBeginDestroy();
-
     Dispose();
-    if (_bIsInstanceInitialized) _bIsInstanceInitialized = false;
+    
+    Super::ConditionalBeginDestroy();
 }
 
 bool URuStoreCore::IsPlatformSupported()

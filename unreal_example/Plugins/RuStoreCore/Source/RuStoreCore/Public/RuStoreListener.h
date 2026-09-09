@@ -1,9 +1,7 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AndroidJavaObject.h"
+#include "AndroidJavaObjectFactory.h"
 
 namespace RuStoreSDK
 {
@@ -19,7 +17,7 @@ namespace RuStoreSDK
 		AndroidJavaObject* javaWrapper = nullptr;
 
 	public:
-		RuStoreListener(FString className, FString interfaceName, bool bAsGlobalRef = true);
+		RuStoreListener(const FString& className, const FString& interfaceName, bool bAsGlobalRef = true);
 		virtual ~RuStoreListener();
 
 		long GetId();

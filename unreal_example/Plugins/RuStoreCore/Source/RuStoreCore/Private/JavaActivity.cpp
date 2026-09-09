@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "JavaActivity.h"
 
 using namespace RuStoreSDK;

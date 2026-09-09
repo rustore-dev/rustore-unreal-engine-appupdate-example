@@ -1,17 +1,21 @@
 ext {
-    rustore_appupdate_version = '10.0.0'
-    rustore_core_version = rustore_appupdate_version
+    rustore_appupdate_version = '10.5.1'
+    rustore_core_version = '10.5.0'
     rustore_sdk_type = ''
-    sdk_version_code = 100000
+    sdk_version_code_appupdate = 100501
+    sdk_version_code_core = 100500
+    sdk_version_code = sdk_version_code_core
+
+    repository = 'https://nexus-external.rustore.ru/repository/maven-rustore-exposed'
 }
 buildscript {
-    ext.kotlin_version = "1.9.0"
+    ext.kotlin_version = "1.9.25"
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.android.tools.build:gradle:8.13.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -24,11 +28,11 @@ allprojects {
         google()
         mavenCentral()
         maven {
-            url = uri("https://artifactory-external.vkpartner.ru/artifactory/maven")
+            url = uri(repository)
         }
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+tasks.register('clean', Delete) {
+    delete rootProject.layout.buildDirectory
 }

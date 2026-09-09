@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -10,7 +8,7 @@ namespace RuStoreSDK
 	class RUSTORECORE_API UnrealPlayerImpl : public RuStoreListener
 	{
 	public:
-		UnrealPlayerImpl() : RuStoreListener("com/Plugins/RuStoreCore/UnrealPlayerWrapper", "ru/rustore/unitysdk/core/IPlayerProvider") { }
+		UnrealPlayerImpl() : RuStoreListener("com/Plugins/RuStoreCore/UnrealPlayerWrapper", "ru/rustore/unrealsdk/core/IPlayerProvider") { }
 		virtual ~UnrealPlayerImpl() { }
 	};
 }

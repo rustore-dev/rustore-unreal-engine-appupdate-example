@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 package com.Plugins.RuStoreCore;
 
 import android.app.Activity;

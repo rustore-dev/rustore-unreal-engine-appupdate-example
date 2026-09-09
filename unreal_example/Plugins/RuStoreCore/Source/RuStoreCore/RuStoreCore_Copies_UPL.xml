@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <prebuildCopies>
+    <copyDir src="$S(PluginDir)/Private/Java" dst="$S(BuildDir)/src/com/Plugins/RuStoreCore" />
+  </prebuildCopies>
+
+  <resourceCopies>
+    <copyDir src="$S(PluginDir)/ThirdParty/Android/libs" dst="$S(BuildDir)/libs" />
+  </resourceCopies>
+
+</root>

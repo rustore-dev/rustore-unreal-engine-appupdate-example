@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -9,6 +7,8 @@
 
 namespace RuStoreSDK
 {
+	class AndroidJavaObjectFactory;
+
 	class RUSTORECORE_API AndroidJavaObject : public IAndroidClasses
 	{
 	private:
@@ -16,6 +16,7 @@ namespace RuStoreSDK
 		FString ExtractName();
 		bool bIsAttachThread = false;
 		bool bIsGlobalRef = true;
+		bool bOwnsJavaClass = false;
 
 #if PLATFORM_ANDROID
 		JNIEnv* env = nullptr;
@@ -28,20 +29,43 @@ namespace RuStoreSDK
 			FAndroidApplication::GetJavaEnv()->GetJavaVM(&CurrentJavaVM);
 			return CurrentJavaVM;
 		}
+
+		// Глобализирует localRef: создаёт owned global refs для javaClass и javaObject,
+		// удаляет (consumes) входной localRef. Вызывать только когда localRef != nullptr.
+		static AndroidJavaObject* WrapAndConsumeLocalRef(JNIEnv* env, jobject localRef)
+		{
+			jclass localClass = env->GetObjectClass(localRef);
+			jclass globalClass = (jclass)env->NewGlobalRef(localClass);
+			env->DeleteLocalRef(localClass);
+
+			if (globalClass == nullptr)
+			{
+				_LogError("AndroidJavaObject", TEXT("WrapAndConsumeLocalRef: NewGlobalRef(localClass) failed"));
+				env->DeleteLocalRef(localRef);
+				return nullptr;
+			}
+
+			jobject globalRef = env->NewGlobalRef(localRef);
+			env->DeleteLocalRef(localRef);
+
+			if (globalRef == nullptr)
+			{
+				_LogError("AndroidJavaObject", TEXT("WrapAndConsumeLocalRef: NewGlobalRef(localRef) failed"));
+				env->DeleteGlobalRef(globalClass);
+				return nullptr;
+			}
+
+			return new AndroidJavaObject(env, globalClass, globalRef, "", true, true);
+		}
+
+		AndroidJavaObject(JNIEnv* env, jclass javaClass, jobject javaObject, const FString& className, bool bIsGlobalRef, bool bOwnsJavaClass = false);
+#else
+		AndroidJavaObject(const FString& className = TEXT(""));
 #endif
+
+		friend class AndroidJavaObjectFactory;
 
 	public:
-		AndroidJavaObject(FString className, bool bAsGlobalRef = true);
-		AndroidJavaObject(FString className, long cppPointer, bool bAsGlobalRef = true);
-#if PLATFORM_ANDROID
-		AndroidJavaObject(jthrowable throwable);
-		AndroidJavaObject(jobject javaObject);
-		AndroidJavaObject(jobject javaObject, FString asInterface);
-		AndroidJavaObject(jclass javaClass, jobject javaObject);
-
-		jobject GetJObject();
-#endif
-
 		virtual ~AndroidJavaObject();
 
 		FString GetName() override;
@@ -66,6 +90,10 @@ namespace RuStoreSDK
 		AndroidJavaObject* UpdateToGlobalRef();
 
 		FString CallJavaClassFString(FString methodName);
+
+#if PLATFORM_ANDROID
+		jobject GetJObject();
+#endif
 
 		template<typename... Args>
 		void CallVoid(FString methodName, Args... args)
@@ -264,8 +292,7 @@ namespace RuStoreSDK
             jobject localRef = FJavaWrapper::CallObjectMethod(env, javaObject, javaMethodID, JavaTypeConverter::SetValue(env, args)...);
 			if (localRef != nullptr)
 			{
-				result = new AndroidJavaObject(localRef);
-				result->UpdateToGlobalRef();
+				result = WrapAndConsumeLocalRef(env, localRef);
 			}
     #endif
 
@@ -288,8 +315,7 @@ namespace RuStoreSDK
             jobject localRef = (jobject)FJavaWrapper::CallObjectMethod(env, javaObject, javaMethodID, JavaTypeConverter::SetValue(env, args)...);
 			if (localRef != nullptr)
 			{
-				result = new AndroidJavaObject(localRef);
-				result->UpdateToGlobalRef();
+				result = WrapAndConsumeLocalRef(env, localRef);
 			}
     #endif
 
@@ -312,8 +338,7 @@ namespace RuStoreSDK
 			jobject localRef = (jobject)FJavaWrapper::CallObjectMethod(env, javaObject, javaMethodID, JavaTypeConverter::SetValue(env, args)...);
 			if (localRef != nullptr)
 			{
-				result = new AndroidJavaObject(localRef);
-				result->UpdateToGlobalRef();
+				result = WrapAndConsumeLocalRef(env, localRef);
 			}
 #endif
 

@@ -1,30 +1,29 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "AppUpdateErrorListenerImpl.h"
+#include "AndroidJavaObjectFactory.h"
 
-using namespace RuStoreSDK;
-
-FURuStoreError* AppUpdateErrorListenerImpl::ConvertError(AndroidJavaObject* errorObject)
+namespace RuStoreSDK
 {
-    auto error = ErrorListener::ConvertError(errorObject);
-
-    if (error->name == "RuStoreInstallException")
+    FURuStoreError* AppUpdateErrorListenerImpl::ConvertError(AndroidJavaObject* errorObject)
     {
-        auto errorCode = errorObject->GetInt("code");
-        error->description = FString::FromInt(errorCode);
-    }
+        auto error = ErrorListener::ConvertError(errorObject);
 
-    return error;
+        if (error->name == "RuStoreInstallException")
+        {
+            auto errorCode = errorObject->GetInt("code");
+            error->description = FString::FromInt(errorCode);
+        }
+
+        return error;
+    }
 }
 
 #if PLATFORM_ANDROID
 extern "C"
 {
-    JNIEXPORT void JNICALL Java_ru_rustore_unitysdk_appupdate_wrappers_AppUpdateErrorListenerWrapper_NativeOnFailure(JNIEnv*, jobject, jlong pointer, jthrowable throwable)
+    JNIEXPORT void JNICALL Java_ru_rustore_unrealsdk_appupdate_wrappers_AppUpdateErrorListenerWrapper_NativeOnFailure(JNIEnv*, jobject, jlong pointer, jthrowable throwable)
     {
-        auto castobj = reinterpret_cast<ErrorListener*>(pointer);
-        auto obj = new AndroidJavaObject(throwable);
-        obj->UpdateToGlobalRef();
+        auto castobj = reinterpret_cast<RuStoreSDK::ErrorListener*>(pointer);
+        auto obj = RuStoreSDK::AndroidJavaObjectFactory::CreateFromThrowable(throwable);
         castobj->OnFailure(obj);
     }
 }

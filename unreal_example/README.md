@@ -1,3 +1,33 @@
+<!-- ── Language switch (RU active) ──────────────────────────────────── -->
+<div align="left" style="margin:0 0 14px 0;">
+
+  <span style="display:inline-block;
+               padding:.28rem .6rem;
+               border:1px solid rgba(0,0,0,.18);
+               border-radius:10px 0 0 10px;
+               font-weight:400;
+               font-size:12px;
+               letter-spacing:.06em;
+               color:#111827;
+               background:linear-gradient(180deg,#e9edf2,#ffffff);
+               box-shadow:inset 0 2px 6px rgba(0,0,0,.10);">
+    RU
+  </span><span style="display:inline-block;
+               margin-left:-1px;
+               padding:.28rem .6rem;
+               border:1px solid rgba(0,0,0,.14);
+               border-radius:0 10px 10px 0;
+               font-weight:400;
+               font-size:12px;
+               letter-spacing:.06em;
+               background:linear-gradient(180deg,#ffffff,#f3f4f6);
+               box-shadow:0 1px 0 rgba(0,0,0,.06);">
+    [EN][en]
+  </span>
+
+</div>
+<!-- ────────────────────────────────────────────────────────────────── -->
+
 ## RuStore Unreal Engine плагин для обновления приложения
 
 ### [🔗 Документация разработчика][10]
@@ -73,7 +103,9 @@
 
 Дополнительная помощь и инструкции доступны на странице [rustore.ru/help/](https://www.rustore.ru/help/) и по электронной почте [support@rustore.ru](mailto:support@rustore.ru).
 
-[10]: https://www.rustore.ru/help/sdk/updates/unreal/10-0-0
-[20]: https://www.rustore.ru/help/sdk/updates/unreal/10-0-0#checkavailable
-[30]: https://www.rustore.ru/help/sdk/updates/unreal/10-0-0#scenariodelayedupdate
-[40]: https://www.rustore.ru/help/sdk/updates/unreal/10-0-0#installupdatesilent
+[10]: https://www.rustore.ru/help/sdk/updates/unreal/10-5-1
+[20]: https://www.rustore.ru/help/sdk/updates/unreal/10-5-1#checkavailable
+[30]: https://www.rustore.ru/help/sdk/updates/unreal/10-5-1#scenariodelayedupdate
+[40]: https://www.rustore.ru/help/sdk/updates/unreal/10-5-1#installupdatesilent
+
+[en]: README.en.md

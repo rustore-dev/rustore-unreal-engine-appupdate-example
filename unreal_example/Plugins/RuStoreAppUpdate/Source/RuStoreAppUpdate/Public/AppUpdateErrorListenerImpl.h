@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "ErrorListener.h"
@@ -12,7 +10,7 @@ namespace RuStoreSDK
         AppUpdateErrorListenerImpl(
             TFunction<void(long, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure,
             TFunction<void(RuStoreListener*)> onFinish
-        ) : ErrorListener("ru/rustore/unitysdk/appupdate/wrappers/AppUpdateErrorListenerWrapper", "ru/rustore/unitysdk/core/callbacks/ErrorListener", onFailure, onFinish)
+        ) : ErrorListener("ru/rustore/unrealsdk/appupdate/wrappers/AppUpdateErrorListenerWrapper", "ru/rustore/unrealsdk/core/callbacks/ErrorListener", onFailure, onFinish)
         {
         }
 

@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -19,7 +17,7 @@ namespace RuStoreSDK
 			TFunction<void(long requestId, TSharedPtr<FURuStoreFeatureAvailabilityResult, ESPMode::ThreadSafe>)> onSuccess,
 			TFunction<void(long requestId, TSharedPtr<FURuStoreError, ESPMode::ThreadSafe>)> onFailure,
 			TFunction<void(RuStoreListener*)> onFinish
-		) : ResponseListener<FURuStoreFeatureAvailabilityResult>("ru/rustore/unitysdk/core/wrappers/FeatureAvailabilityListenerWrapper", "ru/rustore/unitysdk/core/callbacks/FeatureAvailabilityListener", onSuccess, onFailure, onFinish)
+		) : ResponseListener<FURuStoreFeatureAvailabilityResult>("ru/rustore/unrealsdk/core/wrappers/FeatureAvailabilityListenerWrapper", "ru/rustore/unrealsdk/core/callbacks/FeatureAvailabilityListener", onSuccess, onFailure, onFinish)
 		{
 		}
 
